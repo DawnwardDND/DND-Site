@@ -4,20 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chronicles of the Dawnward Realms</title>
+
   <style>
     :root {
       --gold: #d9b76e;
       --bright-gold: #f4d88a;
       --bronze: #9f6f38;
-      --deep-blue: #111a2f;
-      --ocean: #1c355e;
-      --forest: #1d3b2a;
       --parchment: #efe0b8;
-      --ink: #24180f;
-      --shadow: #08070c;
-      --darkness: #130615;
+      --ink: #060506;
+      --shadow: #020202;
+      --blood: #6f1818;
       --ember: #b54b32;
-      --mist: rgba(255, 255, 255, 0.1);
+      --forest: #111a10;
+      --moss: #26351e;
+      --stone: #1d1c19;
+      --mist: rgba(255, 255, 255, 0.08);
     }
 
     * {
@@ -35,9 +36,10 @@
       font-family: Georgia, 'Times New Roman', serif;
       color: var(--parchment);
       background:
-        radial-gradient(circle at 85% 8%, rgba(76, 0, 84, 0.35), transparent 22rem),
-        radial-gradient(circle at 50% 25%, rgba(217, 183, 110, 0.08), transparent 30rem),
-        linear-gradient(135deg, #0c1020 0%, #13213a 42%, #182718 68%, #09070c 100%);
+        radial-gradient(circle at 82% 8%, rgba(0,0,0,0.92), transparent 18rem),
+        radial-gradient(circle at 14% 85%, rgba(111,24,24,0.38), transparent 24rem),
+        radial-gradient(circle at 52% 30%, rgba(217,183,110,0.08), transparent 28rem),
+        linear-gradient(135deg, #030303 0%, #0d1009 32%, #1a1710 58%, #050304 100%);
       overflow-x: hidden;
     }
 
@@ -47,97 +49,135 @@
       inset: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px),
-        radial-gradient(circle, rgba(244,216,138,0.35) 1px, transparent 1px);
-      background-size: 120px 120px, 210px 210px;
-      background-position: 0 0, 60px 80px;
-      animation: starsDrift 48s linear infinite;
-      opacity: 0.35;
+        radial-gradient(circle, rgba(244,216,138,0.42) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.22) 1px, transparent 1px);
+      background-size: 150px 150px, 260px 260px;
+      background-position: 0 0, 70px 90px;
+      opacity: 0.25;
+      animation: starsDrift 60s linear infinite;
       z-index: 0;
     }
 
     body::after {
       content: '';
       position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 26vh;
+      inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 20% 90%, rgba(181, 75, 50, 0.3), transparent 22rem),
-        linear-gradient(to top, rgba(0,0,0,0.9), rgba(19,6,21,0.65), transparent);
+        radial-gradient(circle at 50% 120%, rgba(0,0,0,0.95), transparent 35rem),
+        linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.54));
       z-index: 1;
     }
 
     @keyframes starsDrift {
       from { transform: translateY(0); }
-      to { transform: translateY(-220px); }
+      to { transform: translateY(-260px); }
     }
 
-    .shadow-corner {
+    .ink-blight {
       position: fixed;
-      top: -8rem;
-      right: -8rem;
-      width: 28rem;
-      height: 28rem;
+      inset: -8rem;
+      pointer-events: none;
+      z-index: 2;
       background:
-        radial-gradient(circle, rgba(30, 0, 38, 0.92) 0%, rgba(20, 0, 28, 0.62) 38%, transparent 72%);
-      filter: blur(2px);
+        radial-gradient(circle at 88% 12%, rgba(0,0,0,0.96), transparent 18rem),
+        radial-gradient(circle at 98% 45%, rgba(0,0,0,0.72), transparent 25rem),
+        radial-gradient(circle at 12% 105%, rgba(0,0,0,0.72), transparent 24rem),
+        radial-gradient(circle at 55% -10%, rgba(28,0,28,0.35), transparent 20rem);
+      filter: blur(8px);
+      opacity: 0.8;
+      animation: inkCreep 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes inkCreep {
+      from {
+        transform: scale(1) translate(0, 0);
+        opacity: 0.66;
+      }
+      to {
+        transform: scale(1.08) translate(-22px, 16px);
+        opacity: 0.95;
+      }
+    }
+
+    .black-speech {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 35%;
       z-index: 2;
       pointer-events: none;
-      animation: pulseDarkness 7s ease-in-out infinite;
-    }
-
-    @keyframes pulseDarkness {
-      0%, 100% { transform: scale(1); opacity: 0.82; }
-      50% { transform: scale(1.08); opacity: 1; }
+      text-align: center;
+      color: rgba(244,216,138,0.06);
+      font-size: clamp(2.5rem, 9vw, 8rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transform: rotate(-6deg);
+      user-select: none;
     }
 
     header {
       position: relative;
-      z-index: 3;
+      z-index: 4;
       padding: 5rem 1.5rem 3rem;
       text-align: center;
       overflow: hidden;
     }
 
     .sigil {
-      width: 92px;
-      height: 92px;
+      width: 96px;
+      height: 96px;
       margin: 0 auto 1.2rem;
       border: 2px solid var(--bright-gold);
       border-radius: 50%;
       display: grid;
       place-items: center;
-      box-shadow: 0 0 30px rgba(244, 216, 138, 0.45), inset 0 0 20px rgba(244, 216, 138, 0.18);
+      box-shadow:
+        0 0 34px rgba(244,216,138,0.44),
+        inset 0 0 24px rgba(244,216,138,0.16);
       animation: sigilGlow 4s ease-in-out infinite;
+      background:
+        radial-gradient(circle, rgba(244,216,138,0.14), transparent 65%),
+        rgba(0,0,0,0.45);
     }
 
     .sigil span {
-      font-size: 2.8rem;
-      text-shadow: 0 0 16px var(--bright-gold);
+      font-size: 3rem;
+      color: var(--bright-gold);
+      text-shadow: 0 0 18px var(--bright-gold);
     }
 
     @keyframes sigilGlow {
-      0%, 100% { box-shadow: 0 0 20px rgba(244, 216, 138, 0.35), inset 0 0 14px rgba(244, 216, 138, 0.14); }
-      50% { box-shadow: 0 0 46px rgba(244, 216, 138, 0.75), inset 0 0 28px rgba(244, 216, 138, 0.26); }
+      0%, 100% {
+        box-shadow:
+          0 0 22px rgba(244,216,138,0.34),
+          inset 0 0 14px rgba(244,216,138,0.12);
+      }
+      50% {
+        box-shadow:
+          0 0 52px rgba(244,216,138,0.72),
+          inset 0 0 28px rgba(244,216,138,0.24);
+      }
     }
 
     h1 {
-      font-size: clamp(2.4rem, 7vw, 5.8rem);
-      letter-spacing: 0.08em;
+      font-size: clamp(2.3rem, 7vw, 5.8rem);
+      letter-spacing: 0.13em;
       text-transform: uppercase;
       color: var(--bright-gold);
-      text-shadow: 0 4px 0 #5a3418, 0 0 24px rgba(244,216,138,0.42);
+      text-shadow:
+        0 4px 0 #4b2a13,
+        0 0 28px rgba(244,216,138,0.38),
+        0 0 70px rgba(0,0,0,0.9);
     }
 
     .subtitle {
-      max-width: 850px;
+      max-width: 880px;
       margin: 1rem auto 0;
       font-size: clamp(1.05rem, 2.2vw, 1.45rem);
       line-height: 1.7;
       color: #f6eac6;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.9);
     }
 
     .oath {
@@ -150,22 +190,25 @@
     nav {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 0.6rem;
       padding: 0.8rem;
-      background: rgba(8, 7, 12, 0.78);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.9), rgba(8,7,5,0.78));
       backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(244,216,138,0.25);
-      border-bottom: 1px solid rgba(244,216,138,0.25);
+      border-top: 1px solid rgba(244,216,138,0.28);
+      border-bottom: 1px solid rgba(244,216,138,0.28);
+      box-shadow: 0 10px 34px rgba(0,0,0,0.45);
     }
 
     nav button {
-      border: 1px solid rgba(244,216,138,0.45);
+      border: 1px solid rgba(244,216,138,0.48);
       color: var(--parchment);
-      background: linear-gradient(180deg, rgba(217,183,110,0.18), rgba(28,53,94,0.32));
+      background:
+        linear-gradient(180deg, rgba(217,183,110,0.16), rgba(5,5,5,0.56));
       padding: 0.8rem 1rem;
       border-radius: 999px;
       font-family: inherit;
@@ -179,12 +222,12 @@
       transform: translateY(-2px);
       color: #160e07;
       background: linear-gradient(180deg, var(--bright-gold), var(--bronze));
-      box-shadow: 0 0 18px rgba(244,216,138,0.5);
+      box-shadow: 0 0 20px rgba(244,216,138,0.52);
     }
 
     main {
       position: relative;
-      z-index: 3;
+      z-index: 4;
       width: min(1180px, calc(100% - 2rem));
       margin: 2rem auto 8rem;
     }
@@ -206,12 +249,14 @@
     .panel {
       position: relative;
       padding: clamp(1.3rem, 4vw, 2.5rem);
-      border: 1px solid rgba(244,216,138,0.36);
+      border: 1px solid rgba(244,216,138,0.38);
       border-radius: 28px;
       background:
-        linear-gradient(135deg, rgba(239,224,184,0.12), rgba(17,26,47,0.74)),
-        radial-gradient(circle at 90% 10%, rgba(244,216,138,0.12), transparent 16rem);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.38), inset 0 0 80px rgba(255,255,255,0.03);
+        linear-gradient(135deg, rgba(25,22,14,0.94), rgba(5,5,5,0.84)),
+        radial-gradient(circle at 92% 8%, rgba(244,216,138,0.1), transparent 16rem);
+      box-shadow:
+        0 24px 90px rgba(0,0,0,0.58),
+        inset 0 0 90px rgba(255,255,255,0.03);
       overflow: hidden;
     }
 
@@ -224,12 +269,26 @@
       pointer-events: none;
     }
 
+    .panel::after {
+      content: '';
+      position: absolute;
+      right: -7rem;
+      top: -7rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,0,0,0.9), transparent 70%);
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
     h2 {
       color: var(--bright-gold);
       font-size: clamp(1.8rem, 4vw, 3.2rem);
       margin-bottom: 0.8rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 22px rgba(244,216,138,0.22);
     }
 
     .lead {
@@ -253,7 +312,8 @@
       min-height: 170px;
       border-radius: 20px;
       border: 1px solid rgba(244,216,138,0.28);
-      background: rgba(6, 8, 15, 0.48);
+      background:
+        linear-gradient(135deg, rgba(7,7,7,0.72), rgba(33,27,15,0.48));
       box-shadow: inset 0 0 28px rgba(255,255,255,0.035);
       transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
       overflow: hidden;
@@ -262,17 +322,19 @@
     .card:hover {
       transform: translateY(-6px);
       border-color: rgba(244,216,138,0.75);
-      box-shadow: 0 16px 42px rgba(0,0,0,0.4), 0 0 22px rgba(244,216,138,0.18);
+      box-shadow:
+        0 16px 42px rgba(0,0,0,0.5),
+        0 0 22px rgba(244,216,138,0.18);
     }
 
     .card::after {
       content: '';
       position: absolute;
-      width: 90px;
-      height: 90px;
-      right: -25px;
-      bottom: -25px;
-      background: radial-gradient(circle, rgba(244,216,138,0.18), transparent 70%);
+      width: 100px;
+      height: 100px;
+      right: -30px;
+      bottom: -30px;
+      background: radial-gradient(circle, rgba(244,216,138,0.15), transparent 70%);
       pointer-events: none;
     }
 
@@ -282,7 +344,8 @@
       font-size: 1.25rem;
     }
 
-    .card p, .card li {
+    .card p,
+    .card li {
       color: #efe6c9;
       line-height: 1.55;
     }
@@ -293,13 +356,13 @@
     }
 
     .hero-banner {
-      min-height: 360px;
+      min-height: 370px;
       display: grid;
       align-items: center;
       background:
-        linear-gradient(90deg, rgba(8,7,12,0.18), rgba(8,7,12,0.68)),
-        radial-gradient(circle at 15% 40%, rgba(244,216,138,0.24), transparent 18rem),
-        linear-gradient(135deg, rgba(28,53,94,0.75), rgba(29,59,42,0.72));
+        linear-gradient(90deg, rgba(0,0,0,0.16), rgba(0,0,0,0.76)),
+        radial-gradient(circle at 14% 38%, rgba(244,216,138,0.20), transparent 18rem),
+        linear-gradient(135deg, rgba(20,25,14,0.88), rgba(47,31,14,0.78));
     }
 
     .home-columns {
@@ -310,10 +373,26 @@
     }
 
     .darkness-meter {
+      position: relative;
       padding: 1.2rem;
       border-radius: 20px;
-      background: linear-gradient(180deg, rgba(20,0,28,0.85), rgba(0,0,0,0.55));
+      background:
+        radial-gradient(circle at 90% 10%, rgba(0,0,0,0.9), transparent 12rem),
+        linear-gradient(180deg, rgba(25,0,0,0.68), rgba(0,0,0,0.72));
       border: 1px solid rgba(181,75,50,0.55);
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.65);
+      overflow: hidden;
+    }
+
+    .darkness-meter::after {
+      content: '';
+      position: absolute;
+      inset: auto -2rem -2rem auto;
+      width: 12rem;
+      height: 12rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,0,0,0.9), transparent 70%);
+      pointer-events: none;
     }
 
     .meter-track {
@@ -327,29 +406,30 @@
 
     .meter-fill {
       height: 100%;
-      width: 38%;
-      background: linear-gradient(90deg, #3c0b42, #871f38, #c25d36);
-      box-shadow: 0 0 14px rgba(181,75,50,0.75);
+      width: 46%;
+      background: linear-gradient(90deg, #120012, #4d0d1d, #a23b25);
+      box-shadow: 0 0 16px rgba(181,75,50,0.75);
       animation: creeping 5s ease-in-out infinite;
     }
 
     @keyframes creeping {
-      0%,100% { width: 36%; }
-      50% { width: 43%; }
+      0%,100% { width: 42%; }
+      50% { width: 52%; }
     }
 
     .map-frame {
-      min-height: 420px;
+      min-height: 440px;
       border-radius: 24px;
       border: 2px solid rgba(244,216,138,0.45);
       background:
-        radial-gradient(circle at 20% 35%, rgba(244,216,138,0.18), transparent 8rem),
-        radial-gradient(circle at 70% 65%, rgba(29,59,42,0.8), transparent 10rem),
-        linear-gradient(135deg, rgba(30,64,98,0.8), rgba(40,74,43,0.78));
+        radial-gradient(circle at 20% 35%, rgba(244,216,138,0.16), transparent 8rem),
+        radial-gradient(circle at 70% 65%, rgba(27,45,24,0.84), transparent 10rem),
+        radial-gradient(circle at 82% 72%, rgba(0,0,0,0.85), transparent 12rem),
+        linear-gradient(135deg, rgba(42,48,31,0.88), rgba(22,35,20,0.78));
       position: relative;
       overflow: hidden;
       margin-top: 1.4rem;
-      box-shadow: inset 0 0 90px rgba(0,0,0,0.45);
+      box-shadow: inset 0 0 100px rgba(0,0,0,0.58);
     }
 
     .map-frame::before {
@@ -360,19 +440,38 @@
         linear-gradient(rgba(244,216,138,0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(244,216,138,0.08) 1px, transparent 1px);
       background-size: 46px 46px;
-      opacity: 0.45;
+      opacity: 0.42;
+    }
+
+    .map-frame::after {
+      content: '';
+      position: absolute;
+      right: -6rem;
+      bottom: -6rem;
+      width: 20rem;
+      height: 20rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,0,0,0.95), rgba(0,0,0,0.65), transparent 72%);
+      animation: mapShadow 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes mapShadow {
+      from { transform: scale(1); opacity: 0.7; }
+      to { transform: scale(1.15); opacity: 1; }
     }
 
     .location-pin {
       position: absolute;
+      z-index: 3;
       transform: translate(-50%, -50%);
       padding: 0.45rem 0.7rem;
       border-radius: 999px;
-      background: rgba(7,7,12,0.76);
+      background: rgba(7,7,7,0.82);
       border: 1px solid rgba(244,216,138,0.7);
       color: var(--bright-gold);
       cursor: pointer;
       box-shadow: 0 0 18px rgba(244,216,138,0.25);
+      font-family: inherit;
     }
 
     .location-pin:hover {
@@ -392,15 +491,25 @@
       margin-top: 1.4rem;
     }
 
-    input, textarea, select {
+    input,
+    textarea,
+    select {
       width: 100%;
       padding: 0.9rem 1rem;
       border-radius: 14px;
       border: 1px solid rgba(244,216,138,0.42);
-      background: rgba(4, 6, 12, 0.62);
+      background: rgba(4, 6, 8, 0.72);
       color: var(--parchment);
       font-family: inherit;
       font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(244,216,138,0.85);
+      box-shadow: 0 0 18px rgba(244,216,138,0.18);
     }
 
     textarea {
@@ -425,11 +534,18 @@
       color: #160e07;
       background: linear-gradient(180deg, var(--bright-gold), var(--bronze));
       box-shadow: 0 0 18px rgba(244,216,138,0.34);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .epic-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 0 28px rgba(244,216,138,0.62);
+    }
+
+    .danger-button {
+      color: #f7d6c8;
+      background: linear-gradient(180deg, #7d221a, #2d0505);
+      border: 1px solid rgba(244,216,138,0.25);
     }
 
     .schedule-list {
@@ -445,7 +561,7 @@
       align-items: center;
       padding: 1rem;
       border-radius: 18px;
-      background: rgba(6, 8, 15, 0.5);
+      background: rgba(6, 8, 10, 0.62);
       border: 1px solid rgba(244,216,138,0.25);
     }
 
@@ -461,6 +577,16 @@
       color: var(--bright-gold);
       font-size: 0.82rem;
       margin-bottom: 0.5rem;
+    }
+
+    .small-warning {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid rgba(181,75,50,0.45);
+      background: rgba(0,0,0,0.35);
+      color: #f2d5bd;
+      line-height: 1.55;
     }
 
     footer {
@@ -494,7 +620,7 @@
       border-radius: 50%;
       background: var(--bright-gold);
       pointer-events: none;
-      z-index: 20;
+      z-index: 40;
       box-shadow: 0 0 12px var(--bright-gold);
       animation: sparkleFade 900ms ease-out forwards;
     }
@@ -520,8 +646,10 @@
     }
   </style>
 </head>
+
 <body>
-  <div class="shadow-corner" aria-hidden="true"></div>
+  <div class="ink-blight" aria-hidden="true"></div>
+  <div class="black-speech" aria-hidden="true">Ash • Oath • Shadow</div>
 
   <header>
     <div class="sigil"><span>✦</span></div>
@@ -563,7 +691,7 @@
         <div class="panel">
           <h2>The Call</h2>
           <p class="lead">
-            Long ago, the gods and elder kings sealed the Abyssal Host beneath black stone and oath-bound magic.
+            Long ago, the elder kings sealed the Abyssal Host beneath black stone and oath-bound magic.
             Now the seals are failing. The realms must unite — not as rivals, but as one shield against the night.
           </p>
           <div class="grid">
@@ -700,8 +828,7 @@
       <div class="panel">
         <h2>Campaign Schedule</h2>
         <p class="lead">
-          This local schedule board lets players mark dates that work for them. For a real shared version, connect this section to a Google Form,
-          Discord poll, or shared spreadsheet later.
+          Players can mark dates that work for them. This version is ready for Firebase Firestore so the schedule can be shared across devices instead of only saving in one browser.
         </p>
 
         <div class="form-area">
@@ -714,6 +841,11 @@
           </select>
           <textarea id="scheduleNote" placeholder="Optional note, like preferred time or restrictions"></textarea>
           <button class="epic-button" onclick="addSchedule()">Add Availability</button>
+        </div>
+
+        <div class="small-warning">
+          <strong>Important:</strong> To make this shared, create a Firebase project and replace the firebaseConfig values near the bottom of this file.
+          Until you do that, this page will automatically fall back to localStorage, which only saves on the current device.
         </div>
 
         <div id="scheduleList" class="schedule-list"></div>
@@ -744,60 +876,8 @@
       document.getElementById('locationInfo').innerHTML = `<strong>${name}:</strong> ${description}`;
     }
 
-    const scheduleList = document.getElementById('scheduleList');
-    const savedSchedule = JSON.parse(localStorage.getItem('dndSchedule') || '[]');
-
-    function renderSchedule() {
-      scheduleList.innerHTML = '';
-      if (savedSchedule.length === 0) {
-        scheduleList.innerHTML = '<p class="map-note">No availability added yet. Be the first hero to answer the call.</p>';
-        return;
-      }
-
-      savedSchedule.forEach((entry, index) => {
-        const card = document.createElement('div');
-        card.className = 'date-card';
-        card.innerHTML = `
-          <div>
-            <strong>${entry.name}</strong> — ${entry.date} — <span class="tag">${entry.availability}</span>
-            <p>${entry.note || 'No note added.'}</p>
-          </div>
-          <button class="epic-button" onclick="removeSchedule(${index})">Remove</button>
-        `;
-        scheduleList.appendChild(card);
-      });
-    }
-
-    function addSchedule() {
-      const name = document.getElementById('playerName').value.trim();
-      const date = document.getElementById('dateInput').value;
-      const availability = document.getElementById('availability').value;
-      const note = document.getElementById('scheduleNote').value.trim();
-
-      if (!name || !date) {
-        alert('Please enter your name and a date.');
-        return;
-      }
-
-      savedSchedule.push({ name, date, availability, note });
-      localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule));
-      renderSchedule();
-
-      document.getElementById('playerName').value = '';
-      document.getElementById('dateInput').value = '';
-      document.getElementById('scheduleNote').value = '';
-    }
-
-    function removeSchedule(index) {
-      savedSchedule.splice(index, 1);
-      localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule));
-      renderSchedule();
-    }
-
-    renderSchedule();
-
     document.addEventListener('mousemove', event => {
-      if (Math.random() > 0.88) {
+      if (Math.random() > 0.9) {
         const sparkle = document.createElement('div');
         sparkle.className = 'sparkle';
         sparkle.style.left = event.clientX + 'px';
@@ -806,6 +886,171 @@
         setTimeout(() => sparkle.remove(), 900);
       }
     });
+  </script>
+
+  <!--
+    FIREBASE SETUP:
+    1. Go to https://console.firebase.google.com/
+    2. Create a project.
+    3. Add a Web App.
+    4. Copy your firebaseConfig below.
+    5. Create Firestore Database.
+    6. Start in test mode while developing.
+    7. Replace the firebaseConfig values below.
+  -->
+
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "PASTE_YOUR_API_KEY_HERE",
+      authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "PASTE_YOUR_PROJECT_ID",
+      storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
+      appId: "PASTE_YOUR_APP_ID"
+    };
+
+    const usingFirebase = !firebaseConfig.apiKey.includes("PASTE_");
+    const scheduleList = document.getElementById('scheduleList');
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function renderSchedule(entries, removeHandlerName) {
+      scheduleList.innerHTML = '';
+
+      if (!entries || entries.length === 0) {
+        scheduleList.innerHTML = '<p class="map-note">No availability added yet. Be the first hero to answer the call.</p>';
+        return;
+      }
+
+      entries.forEach((entry, index) => {
+        const card = document.createElement('div');
+        card.className = 'date-card';
+
+        const removeTarget = entry.id || index;
+
+        card.innerHTML = `
+          <div>
+            <strong>${escapeHtml(entry.name)}</strong> — ${escapeHtml(entry.date)} — <span class="tag">${escapeHtml(entry.availability)}</span>
+            <p>${escapeHtml(entry.note || 'No note added.')}</p>
+          </div>
+          <button class="epic-button danger-button" onclick="${removeHandlerName}('${removeTarget}')">Remove</button>
+        `;
+
+        scheduleList.appendChild(card);
+      });
+    }
+
+    async function startFirebaseSchedule() {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+      const {
+        getFirestore,
+        collection,
+        addDoc,
+        deleteDoc,
+        doc,
+        onSnapshot,
+        serverTimestamp,
+        query,
+        orderBy
+      } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const scheduleRef = collection(db, "schedule");
+
+      onSnapshot(query(scheduleRef, orderBy("createdAt", "desc")), snapshot => {
+        const entries = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          ...docSnap.data()
+        }));
+        renderSchedule(entries, "removeFirebaseSchedule");
+      });
+
+      window.addSchedule = async function () {
+        const name = document.getElementById('playerName').value.trim();
+        const date = document.getElementById('dateInput').value;
+        const availability = document.getElementById('availability').value;
+        const note = document.getElementById('scheduleNote').value.trim();
+
+        if (!name || !date) {
+          alert('Please enter your name and a date.');
+          return;
+        }
+
+        await addDoc(scheduleRef, {
+          name,
+          date,
+          availability,
+          note,
+          createdAt: serverTimestamp()
+        });
+
+        document.getElementById('playerName').value = '';
+        document.getElementById('dateInput').value = '';
+        document.getElementById('scheduleNote').value = '';
+      };
+
+      window.removeFirebaseSchedule = async function (id) {
+        await deleteDoc(doc(db, "schedule", id));
+      };
+    }
+
+    function startLocalScheduleFallback() {
+      let savedSchedule = JSON.parse(localStorage.getItem('dndSchedule') || '[]');
+
+      function saveLocalSchedule() {
+        localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule));
+      }
+
+      function renderLocalSchedule() {
+        renderSchedule(savedSchedule, "removeLocalSchedule");
+      }
+
+      window.addSchedule = function () {
+        const name = document.getElementById('playerName').value.trim();
+        const date = document.getElementById('dateInput').value;
+        const availability = document.getElementById('availability').value;
+        const note = document.getElementById('scheduleNote').value.trim();
+
+        if (!name || !date) {
+          alert('Please enter your name and a date.');
+          return;
+        }
+
+        savedSchedule.unshift({ name, date, availability, note });
+        saveLocalSchedule();
+        renderLocalSchedule();
+
+        document.getElementById('playerName').value = '';
+        document.getElementById('dateInput').value = '';
+        document.getElementById('scheduleNote').value = '';
+      };
+
+      window.removeLocalSchedule = function (indexText) {
+        const index = Number(indexText);
+        savedSchedule.splice(index, 1);
+        saveLocalSchedule();
+        renderLocalSchedule();
+      };
+
+      renderLocalSchedule();
+    }
+
+    if (usingFirebase) {
+      startFirebaseSchedule().catch(error => {
+        console.error("Firebase failed. Falling back to localStorage.", error);
+        startLocalScheduleFallback();
+      });
+    } else {
+      startLocalScheduleFallback();
+    }
   </script>
 </body>
 </html>
