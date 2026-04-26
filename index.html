@@ -418,14 +418,25 @@
     }
 
     .map-frame {
+      /*
+        TO USE YOUR OWN MAP IMAGE:
+        1. Create an images folder in your GitHub repo.
+        2. Upload your map as images/map.jpg.
+        3. Change --map-image below if your filename is different.
+      */
+      --map-image: url('images/map.jpg');
       min-height: 440px;
       border-radius: 24px;
       border: 2px solid rgba(244,216,138,0.45);
       background:
+        linear-gradient(90deg, rgba(0,0,0,0.24), rgba(0,0,0,0.56)),
+        var(--map-image),
         radial-gradient(circle at 20% 35%, rgba(244,216,138,0.16), transparent 8rem),
         radial-gradient(circle at 70% 65%, rgba(27,45,24,0.84), transparent 10rem),
         radial-gradient(circle at 82% 72%, rgba(0,0,0,0.85), transparent 12rem),
         linear-gradient(135deg, rgba(42,48,31,0.88), rgba(22,35,20,0.78));
+      background-size: cover, cover, auto, auto, auto, auto;
+      background-position: center, center, center, center, center, center;
       position: relative;
       overflow: hidden;
       margin-top: 1.4rem;
@@ -589,6 +600,34 @@
       line-height: 1.55;
     }
 
+
+    .inner-panel {
+      margin-top: 1.5rem;
+      background:
+        linear-gradient(135deg, rgba(8,7,5,0.92), rgba(0,0,0,0.78)),
+        radial-gradient(circle at 85% 15%, rgba(111,24,24,0.22), transparent 18rem);
+    }
+
+    .request-card {
+      display: grid;
+      gap: 0.45rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(6, 8, 15, 0.52);
+      border: 1px solid rgba(244,216,138,0.25);
+    }
+
+    .request-card strong {
+      color: var(--bright-gold);
+      font-size: 1.1rem;
+    }
+
+    .form-hint {
+      color: #d8cba9;
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
     footer {
       position: relative;
       z-index: 4;
@@ -726,8 +765,8 @@
       <div class="panel">
         <h2>Map of the Realms</h2>
         <p class="lead">
-          Replace this stylized map with your own image later, or keep these magical location pins as a living campaign atlas.
-          Click each pin for location notes.
+          Add your own map by uploading <strong>images/map.jpg</strong> to your GitHub repo. The location pins will remain clickable on top of the map.
+          Click each pin for location notes, then adjust each pin’s left/top percentages to match your image.
         </p>
         <div class="map-frame">
           <button class="location-pin" style="left: 23%; top: 34%;" onclick="showLocation('Aurelion Coast', 'Marble harbors, oracle-temples, bronze ships, and sea winds carrying old prophecies.')">Aurelion Coast</button>
@@ -743,29 +782,34 @@
     <section id="characters">
       <div class="panel">
         <h2>Heroes, Allies, and Shadows</h2>
-        <p class="lead">Use these cards for player characters, important NPCs, rivals, patrons, and suspicious strangers.</p>
+        <p class="lead">
+          Use these cards for player characters, important NPCs, rivals, patrons, and suspicious strangers.
+          Party members can also submit a character request below for DM approval.
+        </p>
+
         <div class="grid">
-          <div class="card">
-            <span class="tag">Player Character</span>
-            <h3>Hero Name</h3>
-            <p><strong>Class:</strong> Paladin / Ranger / Wizard / etc.</p>
-            <p><strong>Known For:</strong> A sacred oath, a broken crown, or a prophecy they refuse to believe.</p>
+          <div class="card"><span class="tag">Player Character</span><h3>Hero Name</h3><p><strong>Class:</strong> Paladin / Ranger / Wizard / etc.</p><p><strong>Known For:</strong> A sacred oath, a broken crown, or a prophecy they refuse to believe.</p></div>
+          <div class="card"><span class="tag">NPC Ally</span><h3>Queen Elowen of Crownspire</h3><p>A ruler trying to unite proud kingdoms before fear divides them forever.</p></div>
+          <div class="card"><span class="tag">NPC Guide</span><h3>Theron the Star-Sailor</h3><p>An old voyager who knows the wine-dark sea, but refuses to speak of his final journey.</p></div>
+          <div class="card"><span class="tag">Enemy</span><h3>The Ashen Herald</h3><p>A cloaked messenger of the dark, seen wherever alliances begin to fracture.</p></div>
+        </div>
+
+        <div class="panel inner-panel">
+          <span class="tag">Character Request</span>
+          <h2>Petition the DM</h2>
+          <p class="lead">Submit the character you want to play. These are requests, not automatic approvals. The DM may limit races, classes, subclasses, or backgrounds to fit the campaign.</p>
+          <div class="form-area">
+            <input id="requestPlayerName" placeholder="Your real name" />
+            <input id="requestCharacterName" placeholder="Character name" />
+            <select id="requestRace"><option value="">Choose Race / Species</option><option>Human</option><option>Elf</option><option>Half-Elf</option><option>Dwarf</option><option>Halfling</option><option>Gnome</option><option>Half-Orc</option><option>Tiefling</option><option>Dragonborn</option><option>Aasimar</option><option>Genasi</option><option>Goliath</option><option>Firbolg</option><option>Tabaxi</option><option>Triton</option><option>Goblin</option><option>Kenku</option><option>Lizardfolk</option><option>Other / Ask DM</option></select>
+            <select id="requestSex"><option value="">Choose Sex / Gender</option><option>Female</option><option>Male</option><option>Nonbinary</option><option>Other / Unspecified</option></select>
+            <select id="requestClass"><option value="">Choose Class</option><option>Barbarian</option><option>Bard</option><option>Cleric</option><option>Druid</option><option>Fighter</option><option>Monk</option><option>Paladin</option><option>Ranger</option><option>Rogue</option><option>Sorcerer</option><option>Warlock</option><option>Wizard</option><option>Artificer</option><option>Blood Hunter / Ask DM</option></select>
+            <select id="requestBackground"><option value="">Choose Background</option><option>Acolyte</option><option>Charlatan</option><option>Criminal</option><option>Entertainer</option><option>Folk Hero</option><option>Guild Artisan</option><option>Hermit</option><option>Noble</option><option>Outlander</option><option>Sage</option><option>Sailor</option><option>Soldier</option><option>Urchin</option><option>Haunted One</option><option>Far Traveler</option><option>Knight</option><option>Pirate</option><option>Custom / Ask DM</option></select>
+            <textarea id="requestConcept" placeholder="Character concept, backstory idea, oath, secret, reason they joined the fellowship, or subclass request"></textarea>
+            <p class="form-hint">Shared saving uses Firebase if configured. Without Firebase, requests are stored only on this browser as a fallback.</p>
+            <button class="epic-button" onclick="submitCharacterRequest()">Submit Character Request</button>
           </div>
-          <div class="card">
-            <span class="tag">NPC Ally</span>
-            <h3>Queen Elowen of Crownspire</h3>
-            <p>A ruler trying to unite proud kingdoms before fear divides them forever.</p>
-          </div>
-          <div class="card">
-            <span class="tag">NPC Guide</span>
-            <h3>Theron the Star-Sailor</h3>
-            <p>An old voyager who knows the wine-dark sea, but refuses to speak of his final journey.</p>
-          </div>
-          <div class="card">
-            <span class="tag">Enemy</span>
-            <h3>The Ashen Herald</h3>
-            <p>A cloaked messenger of the dark, seen wherever alliances begin to fracture.</p>
-          </div>
+          <div id="characterRequestList" class="schedule-list"></div>
         </div>
       </div>
     </section>
@@ -911,14 +955,62 @@
 
     const usingFirebase = !firebaseConfig.apiKey.includes("PASTE_");
     const scheduleList = document.getElementById('scheduleList');
+    const characterRequestList = document.getElementById('characterRequestList');
 
     function escapeHtml(value) {
-      return String(value)
+      return String(value ?? '')
         .replaceAll('&', '&amp;')
         .replaceAll('<', '&lt;')
         .replaceAll('>', '&gt;')
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#039;');
+    }
+
+    function clearScheduleForm() {
+      document.getElementById('playerName').value = '';
+      document.getElementById('dateInput').value = '';
+      document.getElementById('scheduleNote').value = '';
+    }
+
+    function clearCharacterRequestForm() {
+      document.getElementById('requestPlayerName').value = '';
+      document.getElementById('requestCharacterName').value = '';
+      document.getElementById('requestRace').value = '';
+      document.getElementById('requestSex').value = '';
+      document.getElementById('requestClass').value = '';
+      document.getElementById('requestBackground').value = '';
+      document.getElementById('requestConcept').value = '';
+    }
+
+    function getScheduleFormData() {
+      const name = document.getElementById('playerName').value.trim();
+      const date = document.getElementById('dateInput').value;
+      const availability = document.getElementById('availability').value;
+      const note = document.getElementById('scheduleNote').value.trim();
+
+      if (!name || !date) {
+        alert('Please enter your name and a date.');
+        return null;
+      }
+
+      return { name, date, availability, note };
+    }
+
+    function getCharacterRequestFormData() {
+      const playerName = document.getElementById('requestPlayerName').value.trim();
+      const characterName = document.getElementById('requestCharacterName').value.trim();
+      const race = document.getElementById('requestRace').value;
+      const sex = document.getElementById('requestSex').value;
+      const characterClass = document.getElementById('requestClass').value;
+      const background = document.getElementById('requestBackground').value;
+      const concept = document.getElementById('requestConcept').value.trim();
+
+      if (!playerName || !characterName || !race || !sex || !characterClass || !background) {
+        alert('Please complete player name, character name, race, sex/gender, class, and background.');
+        return null;
+      }
+
+      return { playerName, characterName, race, sex, characterClass, background, concept };
     }
 
     function renderSchedule(entries, removeHandlerName) {
@@ -932,7 +1024,6 @@
       entries.forEach((entry, index) => {
         const card = document.createElement('div');
         card.className = 'date-card';
-
         const removeTarget = entry.id || index;
 
         card.innerHTML = `
@@ -947,7 +1038,37 @@
       });
     }
 
-    async function startFirebaseSchedule() {
+    function renderCharacterRequests(entries, removeHandlerName) {
+      characterRequestList.innerHTML = '';
+
+      if (!entries || entries.length === 0) {
+        characterRequestList.innerHTML = '<p class="map-note">No character requests yet. The fellowship awaits its first petition.</p>';
+        return;
+      }
+
+      entries.forEach((entry, index) => {
+        const card = document.createElement('div');
+        card.className = 'request-card';
+        const removeTarget = entry.id || index;
+
+        card.innerHTML = `
+          <strong>${escapeHtml(entry.characterName)}</strong>
+          <p>
+            <span class="tag">${escapeHtml(entry.race)}</span>
+            <span class="tag">${escapeHtml(entry.sex)}</span>
+            <span class="tag">${escapeHtml(entry.characterClass)}</span>
+            <span class="tag">${escapeHtml(entry.background)}</span>
+          </p>
+          <p><strong>Player:</strong> ${escapeHtml(entry.playerName)}</p>
+          <p>${escapeHtml(entry.concept || 'No concept added.')}</p>
+          <button class="epic-button danger-button" onclick="${removeHandlerName}('${removeTarget}')">Remove</button>
+        `;
+
+        characterRequestList.appendChild(card);
+      });
+    }
+
+    async function startFirebaseStorage() {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
       const {
         getFirestore,
@@ -964,73 +1085,68 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       const scheduleRef = collection(db, "schedule");
+      const characterRequestsRef = collection(db, "characterRequests");
 
       onSnapshot(query(scheduleRef, orderBy("createdAt", "desc")), snapshot => {
-        const entries = snapshot.docs.map(docSnap => ({
-          id: docSnap.id,
-          ...docSnap.data()
-        }));
+        const entries = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
         renderSchedule(entries, "removeFirebaseSchedule");
       });
 
+      onSnapshot(query(characterRequestsRef, orderBy("createdAt", "desc")), snapshot => {
+        const entries = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+        renderCharacterRequests(entries, "removeFirebaseCharacterRequest");
+      });
+
       window.addSchedule = async function () {
-        const name = document.getElementById('playerName').value.trim();
-        const date = document.getElementById('dateInput').value;
-        const availability = document.getElementById('availability').value;
-        const note = document.getElementById('scheduleNote').value.trim();
-
-        if (!name || !date) {
-          alert('Please enter your name and a date.');
-          return;
-        }
-
-        await addDoc(scheduleRef, {
-          name,
-          date,
-          availability,
-          note,
-          createdAt: serverTimestamp()
-        });
-
-        document.getElementById('playerName').value = '';
-        document.getElementById('dateInput').value = '';
-        document.getElementById('scheduleNote').value = '';
+        const data = getScheduleFormData();
+        if (!data) return;
+        await addDoc(scheduleRef, { ...data, createdAt: serverTimestamp() });
+        clearScheduleForm();
       };
 
       window.removeFirebaseSchedule = async function (id) {
         await deleteDoc(doc(db, "schedule", id));
       };
+
+      window.submitCharacterRequest = async function () {
+        const data = getCharacterRequestFormData();
+        if (!data) return;
+        await addDoc(characterRequestsRef, { ...data, status: "Pending", createdAt: serverTimestamp() });
+        clearCharacterRequestForm();
+      };
+
+      window.removeFirebaseCharacterRequest = async function (id) {
+        await deleteDoc(doc(db, "characterRequests", id));
+      };
     }
 
-    function startLocalScheduleFallback() {
+    function startLocalFallbackStorage() {
       let savedSchedule = JSON.parse(localStorage.getItem('dndSchedule') || '[]');
+      let savedCharacterRequests = JSON.parse(localStorage.getItem('characterRequests') || '[]');
 
       function saveLocalSchedule() {
         localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule));
+      }
+
+      function saveLocalCharacterRequests() {
+        localStorage.setItem('characterRequests', JSON.stringify(savedCharacterRequests));
       }
 
       function renderLocalSchedule() {
         renderSchedule(savedSchedule, "removeLocalSchedule");
       }
 
+      function renderLocalCharacterRequests() {
+        renderCharacterRequests(savedCharacterRequests, "removeLocalCharacterRequest");
+      }
+
       window.addSchedule = function () {
-        const name = document.getElementById('playerName').value.trim();
-        const date = document.getElementById('dateInput').value;
-        const availability = document.getElementById('availability').value;
-        const note = document.getElementById('scheduleNote').value.trim();
-
-        if (!name || !date) {
-          alert('Please enter your name and a date.');
-          return;
-        }
-
-        savedSchedule.unshift({ name, date, availability, note });
+        const data = getScheduleFormData();
+        if (!data) return;
+        savedSchedule.unshift(data);
         saveLocalSchedule();
         renderLocalSchedule();
-
-        document.getElementById('playerName').value = '';
-        document.getElementById('dateInput').value = '';
-        document.getElementById('scheduleNote').value = '';
+        clearScheduleForm();
       };
 
       window.removeLocalSchedule = function (indexText) {
@@ -1040,17 +1156,35 @@
         renderLocalSchedule();
       };
 
+      window.submitCharacterRequest = function () {
+        const data = getCharacterRequestFormData();
+        if (!data) return;
+        savedCharacterRequests.unshift({ ...data, status: "Pending" });
+        saveLocalCharacterRequests();
+        renderLocalCharacterRequests();
+        clearCharacterRequestForm();
+      };
+
+      window.removeLocalCharacterRequest = function (indexText) {
+        const index = Number(indexText);
+        savedCharacterRequests.splice(index, 1);
+        saveLocalCharacterRequests();
+        renderLocalCharacterRequests();
+      };
+
       renderLocalSchedule();
+      renderLocalCharacterRequests();
     }
 
     if (usingFirebase) {
-      startFirebaseSchedule().catch(error => {
+      startFirebaseStorage().catch(error => {
         console.error("Firebase failed. Falling back to localStorage.", error);
-        startLocalScheduleFallback();
+        startLocalFallbackStorage();
       });
     } else {
-      startLocalScheduleFallback();
+      startLocalFallbackStorage();
     }
   </script>
+
 </body>
 </html>
