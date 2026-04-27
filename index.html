@@ -692,6 +692,12 @@
     .ability-card label { display: block; color: var(--bright-gold); font-weight: bold; margin-bottom: 0.4rem; letter-spacing: 0.04em; }
     .ability-card input { text-align: center; font-size: 1.15rem; font-weight: bold; }
     .tracker-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.7rem; align-items: end; }
+    .field { display: grid; gap: 0.35rem; }
+    .field label { color: var(--bright-gold); font-size: 0.86rem; letter-spacing: 0.03em; }
+    .field .readonly-display { opacity: 0.95; }
+    .ability-mod { display: inline-block; margin-bottom: 0.45rem; color: #f6eac6; font-size: 1.25rem; font-weight: bold; }
+    .sheet-helper { margin-top: 0.75rem; padding: 0.85rem 1rem; border-radius: 14px; border: 1px solid rgba(244,216,138,0.22); background: rgba(0,0,0,0.24); color: #d8cba9; line-height: 1.55; font-size: 0.95rem; }
+    .sheet-helper strong { color: var(--bright-gold); }
     .login-panel { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.32); }
     .login-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.7rem; align-items: center; margin-top: 0.8rem; }
     .save-status { margin-top: 0.8rem; color: #d8cba9; line-height: 1.5; }
@@ -699,6 +705,38 @@
     .class-advice { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.28); color: #efe6c9; line-height: 1.6; }
     .class-advice strong { color: var(--bright-gold); }
     @media (max-width: 760px) { .login-row { grid-template-columns: 1fr; } }
+
+
+    .dm-party-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .dm-party-card {
+      padding: 1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(244,216,138,0.28);
+      background: rgba(6, 8, 15, 0.52);
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .dm-party-card strong {
+      color: var(--bright-gold);
+      font-size: 1.1rem;
+    }
+
+    .dm-edit-banner {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid rgba(217,244,138,0.45);
+      background: rgba(45, 64, 18, 0.32);
+      color: #ecffd0;
+      line-height: 1.55;
+    }
 
 
     footer {
@@ -921,15 +959,25 @@
           <div id="playerLoggedInArea" class="button-row hidden"><button class="epic-button danger-button" onclick="playerLogout()">Log Out</button></div>
           <p id="playerStatus" class="save-status">Not logged in. Ask Mason for your player email and password.</p>
         </div>
+
+        <div id="dmPartyManager" class="dm-panel hidden">
+          <span class="tag">DM Party Manager</span>
+          <h3>Approved Character Sheets</h3>
+          <p class="form-hint">When you are logged in as DM, this shows every approved character and any saved player sheet. Click Edit Sheet to load that player's full sheet below, then save changes directly to their account.</p>
+          <div id="dmPartyList" class="dm-party-list"></div>
+        </div>
+
+        <div id="dmEditingBanner" class="dm-edit-banner hidden">DM edit mode active.</div>
+
         <div id="myCharacterLocked" class="small-warning">Log in to access your private sheet. Each player can only read and save their own sheet.</div>
         <div id="myCharacterSheet" class="hidden">
           <div id="linkedCharacterBanner" class="linked-character-banner">No approved character has been linked yet. You can still draft and save your sheet.</div>
           <div id="classAdvice" class="class-advice"><strong>Class help:</strong> Select or link a class to see reminders for your character.</div>
           <div class="button-row"><button class="epic-button" onclick="loadApprovedCharacterIntoSheet()">Use My Approved Character</button><button class="epic-button" onclick="saveMyCharacterSheet()">Save Character Sheet</button></div>
           <div class="sheet-grid">
-            <div class="sheet-box sheet-wide"><h3>Identity</h3><div class="mini-grid"><input id="sheetCharacterName" placeholder="Character name" /><input id="sheetPlayerName" placeholder="Player name" /><input id="sheetRace" placeholder="Race / Species" /><input id="sheetClass" placeholder="Class" oninput="updateMyClassAdvice()" /><input id="sheetSubclass" placeholder="Subclass / Archetype" /><input id="sheetLevel" type="number" min="1" placeholder="Level" /><input id="sheetBackground" placeholder="Background" /><input id="sheetAlignment" placeholder="Alignment" /><input id="sheetExperience" placeholder="Experience points" /></div></div>
-            <div class="sheet-box sheet-wide"><h3>Core Stats</h3><div class="mini-grid"><div class="ability-card"><label>STR</label><input id="sheetStrength" type="number" placeholder="10" /></div><div class="ability-card"><label>DEX</label><input id="sheetDexterity" type="number" placeholder="10" /></div><div class="ability-card"><label>CON</label><input id="sheetConstitution" type="number" placeholder="10" /></div><div class="ability-card"><label>INT</label><input id="sheetIntelligence" type="number" placeholder="10" /></div><div class="ability-card"><label>WIS</label><input id="sheetWisdom" type="number" placeholder="10" /></div><div class="ability-card"><label>CHA</label><input id="sheetCharisma" type="number" placeholder="10" /></div></div></div>
-            <div class="sheet-box sheet-wide"><h3>Combat Trackers</h3><div class="tracker-row"><input id="sheetHpCurrent" type="number" placeholder="Current HP" /><input id="sheetHpMax" type="number" placeholder="Max HP" /><input id="sheetTempHp" type="number" placeholder="Temporary HP" /><input id="sheetArmorClass" type="number" placeholder="Armor Class" /><input id="sheetInitiative" placeholder="Initiative" /><input id="sheetSpeed" placeholder="Speed" /><input id="sheetHitDice" placeholder="Hit Dice" /><select id="sheetDeathSuccesses"><option value="0">Death Saves Successes: 0</option><option value="1">Successes: 1</option><option value="2">Successes: 2</option><option value="3">Successes: 3</option></select><select id="sheetDeathFailures"><option value="0">Death Saves Failures: 0</option><option value="1">Failures: 1</option><option value="2">Failures: 2</option><option value="3">Failures: 3</option></select></div></div>
+            <div class="sheet-box sheet-wide"><h3>Identity</h3><div class="mini-grid"><div class="field"><label for="sheetCharacterName">Character Name</label><input id="sheetCharacterName" /></div><div class="field"><label for="sheetPlayerName">Player Name</label><input id="sheetPlayerName" /></div><div class="field"><label for="sheetRace">Race / Species</label><input id="sheetRace" /></div><div class="field"><label for="sheetClass">Class</label><input id="sheetClass" oninput="updateMyClassAdvice(); updateDerivedCharacterMath();" /></div><div class="field"><label for="sheetSubclass">Subclass / Archetype</label><input id="sheetSubclass" /></div><div class="field"><label for="sheetLevel">Level</label><input id="sheetLevel" type="number" min="1" max="20" oninput="updateDerivedCharacterMath()" /></div><div class="field"><label for="sheetBackground">Background</label><input id="sheetBackground" /></div><div class="field"><label for="sheetAlignment">Alignment</label><input id="sheetAlignment" /></div><div class="field"><label for="sheetExperience">Experience Points</label><input id="sheetExperience" /></div></div><div class="sheet-helper"><strong>Beginner note:</strong> Your proficiency bonus is based on total character level, not class. Levels 1–4: +2, 5–8: +3, 9–12: +4, 13–16: +5, 17–20: +6.</div></div>
+            <div class="sheet-box sheet-wide"><h3>Core Stats</h3><div class="mini-grid"><div class="ability-card"><label>STR</label><span id="sheetStrengthMod" class="ability-mod">+0</span><input id="sheetStrength" type="number" placeholder="10" /></div><div class="ability-card"><label>DEX</label><span id="sheetDexterityMod" class="ability-mod">+0</span><input id="sheetDexterity" type="number" placeholder="10" /></div><div class="ability-card"><label>CON</label><span id="sheetConstitutionMod" class="ability-mod">+0</span><input id="sheetConstitution" type="number" placeholder="10" /></div><div class="ability-card"><label>INT</label><span id="sheetIntelligenceMod" class="ability-mod">+0</span><input id="sheetIntelligence" type="number" placeholder="10" /></div><div class="ability-card"><label>WIS</label><span id="sheetWisdomMod" class="ability-mod">+0</span><input id="sheetWisdom" type="number" placeholder="10" /></div><div class="ability-card"><label>CHA</label><span id="sheetCharismaMod" class="ability-mod">+0</span><input id="sheetCharisma" type="number" placeholder="10" /></div></div><div class="sheet-helper"><strong>Modifier formula:</strong> Ability modifier = floor((score - 10) / 2). Example: 12 gives +1, 14 gives +2, 8 gives -1.</div></div>
+            <div class="sheet-box sheet-wide"><h3>Combat Trackers</h3><div class="tracker-row"><div class="field"><label for="sheetHpCurrent">Current HP</label><input id="sheetHpCurrent" type="number" /></div><div class="field"><label for="sheetHpMax">Max HP</label><input id="sheetHpMax" type="number" /></div><div class="field"><label for="sheetTempHp">Temporary HP</label><input id="sheetTempHp" type="number" /></div><div class="field"><label for="sheetArmorClass">Armor Class</label><input id="sheetArmorClass" type="number" /></div><div class="field"><label for="sheetInitiative">Initiative</label><input id="sheetInitiative" /></div><div class="field"><label for="sheetSpeed">Speed</label><input id="sheetSpeed" /></div><div class="field"><label for="sheetHitDice">Hit Dice</label><input id="sheetHitDice" /></div><div class="field"><label for="sheetDeathSuccesses">Death Save Successes</label><select id="sheetDeathSuccesses"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div><div class="field"><label for="sheetDeathFailures">Death Save Failures</label><select id="sheetDeathFailures"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div></div>
             <div class="sheet-box"><h3>Saving Throws</h3><textarea id="sheetSavingThrows" placeholder="STR +3, DEX +2, CON +4..."></textarea></div>
             <div class="sheet-box"><h3>Skills</h3><textarea id="sheetSkills" placeholder="Acrobatics, Arcana, Athletics, Perception, Stealth..."></textarea></div>
             <div class="sheet-box"><h3>Senses & Passive Scores</h3><textarea id="sheetSenses" placeholder="Passive Perception, darkvision, insight, investigation..."></textarea></div>
@@ -937,7 +985,7 @@
             <div class="sheet-box"><h3>Proficiencies</h3><textarea id="sheetProficiencies" placeholder="Armor, weapons, tools, saving throws, skills"></textarea></div>
             <div class="sheet-box"><h3>Languages</h3><textarea id="sheetLanguages" placeholder="Common, Elvish, Dwarvish..."></textarea></div>
             <div class="sheet-box sheet-wide"><h3>Features & Traits</h3><textarea id="sheetFeatures" placeholder="Race traits, class features, background feature, feats"></textarea></div>
-            <div class="sheet-box sheet-wide"><h3>Spellcasting & Class Resources</h3><div class="mini-grid"><input id="sheetSpellAbility" placeholder="Spellcasting ability" /><input id="sheetSpellSaveDc" placeholder="Spell save DC" /><input id="sheetSpellAttackBonus" placeholder="Spell attack bonus" /></div><textarea id="sheetSpellSlots" placeholder="Spell slots / pact slots / ki / sorcery points / channel divinity trackers"></textarea><textarea id="sheetSpellsKnown" placeholder="Cantrips, prepared spells, known spells, rituals"></textarea></div>
+            <div class="sheet-box sheet-wide"><h3>Spellcasting & Class Resources</h3><div id="spellcastingGuide" class="sheet-helper"><strong>Spellcasting:</strong> Select a class and enter ability scores to calculate spellcasting details.</div><div class="mini-grid"><div class="field"><label for="sheetProficiencyBonus">Proficiency Bonus</label><input id="sheetProficiencyBonus" class="readonly-display" readonly /></div><div class="field"><label for="sheetSpellAbility">Spellcasting Ability</label><input id="sheetSpellAbility" /></div><div class="field"><label for="sheetSpellSaveDc">Spell Save DC</label><input id="sheetSpellSaveDc" /></div><div class="field"><label for="sheetSpellAttackBonus">Spell Attack Bonus</label><input id="sheetSpellAttackBonus" /></div></div><div class="field"><label for="sheetSpellSlots">Spell Slots / Class Resource Trackers</label><textarea id="sheetSpellSlots" placeholder="Examples: spell slots, pact slots, ki, sorcery points, channel divinity, rage uses, bardic inspiration"></textarea></div><div class="field"><label for="sheetSpellsKnown">Cantrips, Prepared Spells, Known Spells, Rituals</label><textarea id="sheetSpellsKnown"></textarea></div></div>
             <div class="sheet-box sheet-wide"><h3>Equipment, Treasure & Inventory</h3><textarea id="sheetInventory" placeholder="Weapons, armor, adventuring gear, magic items, coin"></textarea></div>
             <div class="sheet-box"><h3>Personality</h3><textarea id="sheetPersonality" placeholder="Personality traits"></textarea></div><div class="sheet-box"><h3>Ideals</h3><textarea id="sheetIdeals" placeholder="Ideals"></textarea></div><div class="sheet-box"><h3>Bonds</h3><textarea id="sheetBonds" placeholder="Bonds"></textarea></div><div class="sheet-box"><h3>Flaws</h3><textarea id="sheetFlaws" placeholder="Flaws"></textarea></div>
             <div class="sheet-box sheet-wide"><h3>Backstory & Campaign Notes</h3><textarea id="sheetBackstory" placeholder="Backstory, goals, secrets, NPC connections, session notes"></textarea></div>
@@ -1088,6 +1136,7 @@
     const scheduleList = document.getElementById('scheduleList');
     const characterRequestList = document.getElementById('characterRequestList');
     const approvedCharacterList = document.getElementById('approvedCharacterList');
+    const dmPartyList = document.getElementById('dmPartyList');
     const DM_UID = 'DIHVuUbH7tTYoPJeioF6SRW51dI3';
     let isDM = false;
     let currentScheduleEntries = [];
@@ -1096,6 +1145,10 @@
     let currentUser = null;
     let myCharacterUnsubscribe = null;
     let currentMyCharacterData = null;
+    let currentAllCharacterSheets = [];
+    let dmEditingUid = null;
+    let dmEditingEmail = '';
+    let allCharacterSheetsUnsubscribe = null;
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -1187,6 +1240,12 @@
     });
 
     updateChoiceDescriptions();
+
+
+    ['sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetLevel','sheetClass'].forEach(id => {
+      const element = document.getElementById(id);
+      if (element) element.addEventListener('input', updateDerivedCharacterMath);
+    });
 
     function clearScheduleForm() {
       document.getElementById('playerName').value = '';
@@ -1353,6 +1412,96 @@
       "Artificer": "Track infusions, tools, prepared spells, magical tinkering, subclass features, and crafted items.",
       "Blood Hunter / Ask DM": "Track hemocraft die, blood curses, crimson rite, order features, and self-damage carefully. Confirm rules with Mason."
     };
+
+    const spellcastingAbilityByClass = {
+      "Bard": "Charisma",
+      "Cleric": "Wisdom",
+      "Druid": "Wisdom",
+      "Paladin": "Charisma",
+      "Ranger": "Wisdom",
+      "Sorcerer": "Charisma",
+      "Warlock": "Charisma",
+      "Wizard": "Intelligence",
+      "Artificer": "Intelligence"
+    };
+
+    const classResourceHints = {
+      "Barbarian": "Barbarians usually do not cast spells. Track Rage uses and other subclass resources here.",
+      "Bard": "Bards cast with Charisma. Spell save DC = 8 + proficiency bonus + CHA modifier. Spell attack = proficiency bonus + CHA modifier.",
+      "Cleric": "Clerics cast with Wisdom. Spell save DC = 8 + proficiency bonus + WIS modifier. Spell attack = proficiency bonus + WIS modifier.",
+      "Druid": "Druids cast with Wisdom. Spell save DC = 8 + proficiency bonus + WIS modifier. Spell attack = proficiency bonus + WIS modifier. Track Wild Shape too.",
+      "Fighter": "Most fighters do not cast spells unless they are Eldritch Knights. If so, they usually use Intelligence. Track Second Wind and Action Surge here.",
+      "Monk": "Monks usually do not cast spells. Track Ki, martial arts, and tradition features here.",
+      "Paladin": "Paladins cast with Charisma. Spell save DC = 8 + proficiency bonus + CHA modifier. Spell attack = proficiency bonus + CHA modifier. Track Lay on Hands and Divine Smite.",
+      "Ranger": "Rangers cast with Wisdom. Spell save DC = 8 + proficiency bonus + WIS modifier. Spell attack = proficiency bonus + WIS modifier.",
+      "Rogue": "Most rogues do not cast spells unless they are Arcane Tricksters. If so, they usually use Intelligence. Track Sneak Attack here.",
+      "Sorcerer": "Sorcerers cast with Charisma. Spell save DC = 8 + proficiency bonus + CHA modifier. Spell attack = proficiency bonus + CHA modifier. Track sorcery points.",
+      "Warlock": "Warlocks cast with Charisma. Spell save DC = 8 + proficiency bonus + CHA modifier. Spell attack = proficiency bonus + CHA modifier. Pact slots usually return on short rest.",
+      "Wizard": "Wizards cast with Intelligence. Spell save DC = 8 + proficiency bonus + INT modifier. Spell attack = proficiency bonus + INT modifier. Track spellbook and prepared spells.",
+      "Artificer": "Artificers cast with Intelligence. Spell save DC = 8 + proficiency bonus + INT modifier. Spell attack = proficiency bonus + INT modifier. Track infusions too.",
+      "Blood Hunter / Ask DM": "Confirm rules with Mason. If using spellcasting or hemocraft features, track the chosen ability and resource here."
+    };
+
+    function signedNumber(value) {
+      const n = Number(value) || 0;
+      return n >= 0 ? `+${n}` : `${n}`;
+    }
+
+    function abilityModifier(score) {
+      const n = Number(score);
+      if (!Number.isFinite(n)) return 0;
+      return Math.floor((n - 10) / 2);
+    }
+
+    function proficiencyBonusForLevel(level) {
+      const lvl = Math.min(20, Math.max(1, Number(level) || 1));
+      return Math.ceil(lvl / 4) + 1;
+    }
+
+    function getAbilityScoreByName(abilityName) {
+      const key = String(abilityName || '').toLowerCase();
+      if (key.startsWith('str')) return getSheetValue('sheetStrength');
+      if (key.startsWith('dex')) return getSheetValue('sheetDexterity');
+      if (key.startsWith('con')) return getSheetValue('sheetConstitution');
+      if (key.startsWith('int')) return getSheetValue('sheetIntelligence');
+      if (key.startsWith('wis')) return getSheetValue('sheetWisdom');
+      if (key.startsWith('cha')) return getSheetValue('sheetCharisma');
+      return '';
+    }
+
+    function updateDerivedCharacterMath() {
+      const abilityIds = [
+        ['sheetStrength', 'sheetStrengthMod'],
+        ['sheetDexterity', 'sheetDexterityMod'],
+        ['sheetConstitution', 'sheetConstitutionMod'],
+        ['sheetIntelligence', 'sheetIntelligenceMod'],
+        ['sheetWisdom', 'sheetWisdomMod'],
+        ['sheetCharisma', 'sheetCharismaMod']
+      ];
+      abilityIds.forEach(([inputId, outputId]) => {
+        const output = document.getElementById(outputId);
+        if (output) output.textContent = signedNumber(abilityModifier(getSheetValue(inputId) || 10));
+      });
+
+      const level = getSheetValue('sheetLevel') || 1;
+      const proficiency = proficiencyBonusForLevel(level);
+      const proficiencyBox = document.getElementById('sheetProficiencyBonus');
+      if (proficiencyBox) proficiencyBox.value = signedNumber(proficiency);
+
+      const className = getSheetValue('sheetClass');
+      const spellAbility = spellcastingAbilityByClass[className] || '';
+      const guide = document.getElementById('spellcastingGuide');
+      if (spellAbility) {
+        const mod = abilityModifier(getAbilityScoreByName(spellAbility) || 10);
+        setSheetValue('sheetSpellAbility', `${spellAbility} ${signedNumber(mod)}`);
+        setSheetValue('sheetSpellSaveDc', `${8 + proficiency + mod}`);
+        setSheetValue('sheetSpellAttackBonus', signedNumber(proficiency + mod));
+        if (guide) guide.innerHTML = `<strong>${escapeHtml(className)} spellcasting:</strong> ${escapeHtml(classResourceHints[className])}`;
+      } else {
+        if (guide) guide.innerHTML = `<strong>${escapeHtml(className || 'Class resources')}:</strong> ${escapeHtml(classResourceHints[className] || 'This class may not have standard spellcasting. Use this area for class resources, magic items, special powers, or DM-approved features.')}`;
+      }
+    }
+
     const sheetFieldIds = ['sheetCharacterName','sheetPlayerName','sheetRace','sheetClass','sheetSubclass','sheetLevel','sheetBackground','sheetAlignment','sheetExperience','sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetHpCurrent','sheetHpMax','sheetTempHp','sheetArmorClass','sheetInitiative','sheetSpeed','sheetHitDice','sheetDeathSuccesses','sheetDeathFailures','sheetSavingThrows','sheetSkills','sheetSenses','sheetAttacks','sheetProficiencies','sheetLanguages','sheetFeatures','sheetSpellAbility','sheetSpellSaveDc','sheetSpellAttackBonus','sheetSpellSlots','sheetSpellsKnown','sheetInventory','sheetPersonality','sheetIdeals','sheetBonds','sheetFlaws','sheetBackstory'];
     function updatePlayerUI(user) {
       currentUser = user || null;
@@ -1362,21 +1511,118 @@
       const locked = document.getElementById('myCharacterLocked');
       const sheet = document.getElementById('myCharacterSheet');
       if (!loginArea || !loggedInArea || !status || !locked || !sheet) return;
-      if (user) { loginArea.classList.add('hidden'); loggedInArea.classList.remove('hidden'); locked.classList.add('hidden'); sheet.classList.remove('hidden'); status.textContent = `Logged in as ${user.email}. This sheet saves only to your account.`; }
+      const dmPartyManager = document.getElementById('dmPartyManager');
+      const dmEditingBanner = document.getElementById('dmEditingBanner');
+      if (dmPartyManager) dmPartyManager.classList.toggle('hidden', !isDM);
+      if (dmEditingBanner) dmEditingBanner.classList.toggle('hidden', !dmEditingUid);
+      if (user) { loginArea.classList.add('hidden'); loggedInArea.classList.remove('hidden'); locked.classList.add('hidden'); sheet.classList.remove('hidden'); status.textContent = isDM ? `DM logged in as ${user.email}. You can edit your own sheet or use the Party Manager below.` : `Logged in as ${user.email}. This sheet saves only to your account.`; }
       else { loginArea.classList.remove('hidden'); loggedInArea.classList.add('hidden'); locked.classList.remove('hidden'); sheet.classList.add('hidden'); status.textContent = 'Not logged in. Ask Mason for your player email and password.'; }
+      renderDMPartyManager();
     }
     function getApprovedForCurrentUser() { if (!currentUser?.email) return null; const email = currentUser.email.toLowerCase(); return currentApprovedEntries.find(entry => String(entry.playerEmail || '').toLowerCase() === email) || null; }
     function updateLinkedCharacterBanner() { const banner = document.getElementById('linkedCharacterBanner'); if (!banner) return; const approved = getApprovedForCurrentUser(); if (approved) banner.innerHTML = `<strong>Linked approved character:</strong> ${escapeHtml(approved.characterName)} — ${escapeHtml(approved.race)} ${escapeHtml(approved.characterClass)}. Use the button above to pull this approved identity into your sheet.`; else if (currentUser) banner.innerHTML = `No approved character is linked to <strong>${escapeHtml(currentUser.email)}</strong> yet. Submit a request using that exact email, or ask Mason to approve/link your character.`; else banner.textContent = 'Log in to link an approved character.'; }
     function updateMyClassAdvice() { const className = document.getElementById('sheetClass')?.value || ''; const box = document.getElementById('classAdvice'); if (!box) return; const note = classPlayNotes[className] || classDescriptions[className] || 'Fill in class features, resources, attacks, spells, and trackers that matter for your character.'; box.innerHTML = `<strong>${escapeHtml(className || 'Class help')}:</strong> ${escapeHtml(note)}`; }
     function setSheetValue(id, value) { const el = document.getElementById(id); if (el) el.value = value ?? ''; }
     function getSheetValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
-    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); updateMyClassAdvice(); }
-    function collectSheetData() { const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.ownerEmail = currentUser?.email || ''; data.ownerUid = currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
-    function loadApprovedCharacterIntoSheet() { const approved = getApprovedForCurrentUser(); if (!approved) return alert('No approved character is linked to your login email yet.'); setSheetValue('sheetCharacterName', approved.characterName || ''); setSheetValue('sheetPlayerName', approved.playerName || ''); setSheetValue('sheetRace', approved.race || ''); setSheetValue('sheetClass', approved.characterClass || ''); setSheetValue('sheetBackground', approved.background || ''); const backstory = getSheetValue('sheetBackstory'); if (!backstory && approved.concept) setSheetValue('sheetBackstory', approved.concept); updateMyClassAdvice(); document.getElementById('myCharacterSaveStatus').textContent = 'Approved character loaded into the sheet. Click Save Character Sheet to keep it.'; }
+    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); updateMyClassAdvice(); updateDerivedCharacterMath(); }
+    function collectSheetData() { updateDerivedCharacterMath(); const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.ProficiencyBonus = getSheetValue('sheetProficiencyBonus'); data.AbilityModifiers = { Strength: document.getElementById('sheetStrengthMod')?.textContent || '+0', Dexterity: document.getElementById('sheetDexterityMod')?.textContent || '+0', Constitution: document.getElementById('sheetConstitutionMod')?.textContent || '+0', Intelligence: document.getElementById('sheetIntelligenceMod')?.textContent || '+0', Wisdom: document.getElementById('sheetWisdomMod')?.textContent || '+0', Charisma: document.getElementById('sheetCharismaMod')?.textContent || '+0' }; data.ownerEmail = dmEditingUid ? dmEditingEmail : (currentUser?.email || ''); data.ownerUid = dmEditingUid || currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = dmEditingUid ? getApprovedByEmail(dmEditingEmail) : getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
+    function loadApprovedCharacterIntoSheet() { const approved = getApprovedForCurrentUser(); if (!approved) return alert('No approved character is linked to your login email yet.'); setSheetValue('sheetCharacterName', approved.characterName || ''); setSheetValue('sheetPlayerName', approved.playerName || ''); setSheetValue('sheetRace', approved.race || ''); setSheetValue('sheetClass', approved.characterClass || ''); setSheetValue('sheetBackground', approved.background || ''); const backstory = getSheetValue('sheetBackstory'); if (!backstory && approved.concept) setSheetValue('sheetBackstory', approved.concept); updateMyClassAdvice(); updateDerivedCharacterMath(); document.getElementById('myCharacterSaveStatus').textContent = 'Approved character loaded into the sheet. Click Save Character Sheet to keep it.'; }
+    function getApprovedByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentApprovedEntries.find(entry => String(entry.playerEmail || '').toLowerCase() === lower) || null; }
+    function getSavedSheetByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentAllCharacterSheets.find(entry => String(entry.ownerEmail || '').toLowerCase() === lower) || null; }
+    function renderDMPartyManager() {
+      if (!dmPartyList) return;
+      const manager = document.getElementById('dmPartyManager');
+      if (manager) manager.classList.toggle('hidden', !isDM);
+      dmPartyList.innerHTML = '';
+      if (!isDM) return;
+      const byEmail = new Map();
+      currentApprovedEntries.forEach(character => {
+        const email = String(character.playerEmail || '').toLowerCase();
+        if (!email) return;
+        byEmail.set(email, { approved: character, sheet: getSavedSheetByEmail(email) });
+      });
+      currentAllCharacterSheets.forEach(sheet => {
+        const email = String(sheet.ownerEmail || '').toLowerCase();
+        if (!email || byEmail.has(email)) return;
+        byEmail.set(email, { approved: getApprovedByEmail(email), sheet });
+      });
+      const rows = Array.from(byEmail.values());
+      if (rows.length === 0) {
+        dmPartyList.innerHTML = '<p class="map-note">No approved characters or saved player sheets found yet.</p>';
+        return;
+      }
+      rows.forEach(({ approved, sheet }) => {
+        const uid = sheet?.pathUid || sheet?.ownerUid || '';
+        const email = approved?.playerEmail || sheet?.ownerEmail || '';
+        const name = sheet?.CharacterName || approved?.characterName || 'Unnamed Character';
+        const race = sheet?.Race || approved?.race || 'Race not set';
+        const className = sheet?.Class || approved?.characterClass || 'Class not set';
+        const level = sheet?.Level ? `Level ${sheet.Level}` : 'Level not set';
+        const card = document.createElement('div');
+        card.className = 'dm-party-card';
+        const editButton = uid ? `<button class="epic-button" onclick="dmLoadPlayerSheet('${escapeHtml(uid)}')">Edit Full Sheet</button>` : '<p class="form-hint">No saved sheet yet. Have this player log in and click Save Character Sheet once.</p>';
+        const approvedButton = approved ? `<button class="epic-button" onclick="dmLoadApprovedIntoEditor('${escapeHtml(approved.id)}')">Load Approved Card</button>` : '';
+        card.innerHTML = `
+          <strong>${escapeHtml(name)}</strong>
+          <p><span class="tag">${escapeHtml(race)}</span> <span class="tag">${escapeHtml(className)}</span> <span class="tag">${escapeHtml(level)}</span></p>
+          <p><strong>Player:</strong> ${escapeHtml(approved?.playerName || sheet?.PlayerName || 'Unknown')}</p>
+          <p><strong>Email:</strong> ${escapeHtml(email || 'No email linked')}</p>
+          <div class="request-actions">${editButton}${approvedButton}</div>
+        `;
+        dmPartyList.appendChild(card);
+      });
+    }
+    function setDMEditingBanner() {
+      const banner = document.getElementById('dmEditingBanner');
+      if (!banner) return;
+      if (dmEditingUid) {
+        banner.classList.remove('hidden');
+        banner.innerHTML = `<strong>DM edit mode:</strong> You are editing ${escapeHtml(getSheetValue('sheetCharacterName') || 'this character')} for ${escapeHtml(dmEditingEmail || dmEditingUid)}. Saving will update that player’s private sheet. <button class="epic-button danger-button" onclick="dmStopEditingPlayerSheet()">Stop Editing</button>`;
+      } else {
+        banner.classList.add('hidden');
+        banner.textContent = 'DM edit mode inactive.';
+      }
+    }
+    function dmLoadPlayerSheet(uid) {
+      if (!isDM) return alert('Only the DM can edit other character sheets.');
+      const sheet = currentAllCharacterSheets.find(entry => (entry.pathUid || entry.ownerUid) === uid);
+      if (!sheet) return alert('Could not find that saved sheet. The player may need to save it once first.');
+      dmEditingUid = uid;
+      dmEditingEmail = sheet.ownerEmail || '';
+      fillSheet(sheet);
+      document.getElementById('myCharacterSheet')?.classList.remove('hidden');
+      document.getElementById('myCharacterLocked')?.classList.add('hidden');
+      document.getElementById('myCharacterSaveStatus').textContent = 'Loaded player sheet for DM editing. Changes are not saved until you click Save Character Sheet.';
+      setDMEditingBanner();
+      window.scrollTo({ top: document.getElementById('mycharacter').offsetTop, behavior: 'smooth' });
+    }
+    function dmLoadApprovedIntoEditor(id) {
+      if (!isDM) return alert('Only the DM can do this.');
+      const approved = currentApprovedEntries.find(entry => entry.id === id);
+      if (!approved) return alert('Could not find that approved character.');
+      const sheet = getSavedSheetByEmail(approved.playerEmail);
+      if (sheet?.pathUid) { dmLoadPlayerSheet(sheet.pathUid); }
+      setSheetValue('sheetCharacterName', approved.characterName || '');
+      setSheetValue('sheetPlayerName', approved.playerName || '');
+      setSheetValue('sheetRace', approved.race || '');
+      setSheetValue('sheetClass', approved.characterClass || '');
+      setSheetValue('sheetBackground', approved.background || '');
+      if (!getSheetValue('sheetBackstory') && approved.concept) setSheetValue('sheetBackstory', approved.concept);
+      updateMyClassAdvice();
+      document.getElementById('myCharacterSaveStatus').textContent = sheet?.pathUid ? 'Approved card loaded into saved player sheet. Click Save Character Sheet.' : 'Approved card loaded, but no saved player sheet exists yet. Player must log in and save once before DM can save to their account.';
+    }
+    function dmStopEditingPlayerSheet() {
+      dmEditingUid = null;
+      dmEditingEmail = '';
+      setDMEditingBanner();
+      if (currentMyCharacterData) fillSheet(currentMyCharacterData); else fillSheet({});
+      document.getElementById('myCharacterSaveStatus').textContent = 'Stopped editing another player. Your own sheet is loaded again.';
+    }
+
 
     async function startFirebaseStorage() {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-      const { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      const { getFirestore, collection, collectionGroup, addDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
       const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
 
       const app = initializeApp(firebaseConfig);
@@ -1422,6 +1668,18 @@
         updateLinkedCharacterBanner();
       });
 
+      onSnapshot(collectionGroup(db, "character"), snapshot => {
+        currentAllCharacterSheets = snapshot.docs.map(docSnap => {
+          const parts = docSnap.ref.path.split('/');
+          const pathUid = parts[1] || '';
+          return { id: docSnap.id, path: docSnap.ref.path, pathUid, ...docSnap.data() };
+        });
+        renderDMPartyManager();
+      }, error => {
+        console.error('Could not load all character sheets for DM Party Manager.', error);
+        if (dmPartyList && isDM) dmPartyList.innerHTML = '<p class="map-note">Could not load all character sheets. Check Firestore rules for users/{userId}/character/{docId}.</p>';
+      });
+
       window.dmLogin = async function () {
         const email = document.getElementById('dmEmail').value.trim();
         const password = document.getElementById('dmPassword').value;
@@ -1439,9 +1697,12 @@
 
       window.playerLogin = async function () { const email = document.getElementById('playerEmail').value.trim(); const password = document.getElementById('playerPassword').value; if (!email || !password) return alert('Please enter your player email and password.'); try { await signInWithEmailAndPassword(auth, email, password); document.getElementById('playerPassword').value = ''; } catch (error) { alert('Login failed. Check your email/password or ask Mason to create your Firebase Authentication account.'); console.error(error); } };
       window.playerLogout = async function () { await signOut(auth); };
-      window.saveMyCharacterSheet = async function () { if (!currentUser) return alert('Log in before saving your character sheet.'); const data = collectSheetData(); await setDoc(doc(db, "users", currentUser.uid, "character", "main"), { ...data, updatedAt: serverTimestamp() }, { merge: true }); document.getElementById('myCharacterSaveStatus').textContent = 'Character sheet saved.'; };
+      window.saveMyCharacterSheet = async function () { if (!currentUser) return alert('Log in before saving your character sheet.'); const targetUid = dmEditingUid || currentUser.uid; if (dmEditingUid && !isDM) return alert('Only the DM can save another player’s sheet.'); const data = collectSheetData(); await setDoc(doc(db, "users", targetUid, "character", "main"), { ...data, updatedAt: serverTimestamp() }, { merge: true }); document.getElementById('myCharacterSaveStatus').textContent = dmEditingUid ? 'Player character sheet saved by DM.' : 'Character sheet saved.'; };
       window.loadApprovedCharacterIntoSheet = loadApprovedCharacterIntoSheet;
       window.updateMyClassAdvice = updateMyClassAdvice;
+      window.dmLoadPlayerSheet = dmLoadPlayerSheet;
+      window.dmLoadApprovedIntoEditor = dmLoadApprovedIntoEditor;
+      window.dmStopEditingPlayerSheet = dmStopEditingPlayerSheet;
 
 
       window.addSchedule = async function () {
@@ -1505,6 +1766,9 @@
       window.saveMyCharacterSheet = function () { localStorage.setItem('myCharacterSheet', JSON.stringify(collectSheetData())); document.getElementById('myCharacterSaveStatus').textContent = 'Character sheet saved locally.'; };
       window.loadApprovedCharacterIntoSheet = loadApprovedCharacterIntoSheet;
       window.updateMyClassAdvice = updateMyClassAdvice;
+      window.dmLoadPlayerSheet = dmLoadPlayerSheet;
+      window.dmLoadApprovedIntoEditor = dmLoadApprovedIntoEditor;
+      window.dmStopEditingPlayerSheet = dmStopEditingPlayerSheet;
 
       window.addSchedule = function () {
         const data = getScheduleFormData();
