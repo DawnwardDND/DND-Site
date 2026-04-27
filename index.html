@@ -926,7 +926,7 @@
           <p class="lead">Submit the character you want to play. These are requests, not automatic approvals. The DM may limit races, classes, subclasses, or backgrounds to fit the campaign.</p>
           <div class="form-area">
             <input id="requestPlayerName" placeholder="Your real name" />
-            <input id="requestPlayerEmail" type="email" placeholder="Email" />
+            <input id="requestPlayerEmail" type="email" placeholder="Your Firebase login email for My Character tab" />
             <input id="requestCharacterName" placeholder="Character name" />
             <select id="requestRace"><option value="">Choose Race / Species</option><option>Human</option><option>Elf</option><option>Half-Elf</option><option>Dwarf</option><option>Halfling</option><option>Gnome</option><option>Half-Orc</option><option>Tiefling</option><option>Dragonborn</option><option>Aasimar</option><option>Genasi</option><option>Goliath</option><option>Firbolg</option><option>Tabaxi</option><option>Triton</option><option>Goblin</option><option>Kenku</option><option>Lizardfolk</option><option>Other / Ask DM</option></select>
             <div id="raceDescription" class="choice-help"><strong>Race / Species:</strong> Choose one to see a quick roleplay description.</div>
@@ -963,7 +963,7 @@
         <div id="dmPartyManager" class="dm-panel hidden">
           <span class="tag">DM Party Manager</span>
           <h3>Approved Character Sheets</h3>
-          <p class="form-hint">When you are logged in as DM, this shows every approved character and any saved player sheet. Click Edit Sheet to load that player's full sheet below, then save changes directly to their account.</p>
+          <p class="form-hint">When you are logged in as DM, this shows every approved character. Paste a player Firebase UID once, then you can create/edit that player’s full sheet before they ever log in.</p>
           <div id="dmPartyList" class="dm-party-list"></div>
         </div>
 
@@ -1529,30 +1529,40 @@
     function loadApprovedCharacterIntoSheet() { const approved = getApprovedForCurrentUser(); if (!approved) return alert('No approved character is linked to your login email yet.'); setSheetValue('sheetCharacterName', approved.characterName || ''); setSheetValue('sheetPlayerName', approved.playerName || ''); setSheetValue('sheetRace', approved.race || ''); setSheetValue('sheetClass', approved.characterClass || ''); setSheetValue('sheetBackground', approved.background || ''); const backstory = getSheetValue('sheetBackstory'); if (!backstory && approved.concept) setSheetValue('sheetBackstory', approved.concept); updateMyClassAdvice(); updateDerivedCharacterMath(); document.getElementById('myCharacterSaveStatus').textContent = 'Approved character loaded into the sheet. Click Save Character Sheet to keep it.'; }
     function getApprovedByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentApprovedEntries.find(entry => String(entry.playerEmail || '').toLowerCase() === lower) || null; }
     function getSavedSheetByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentAllCharacterSheets.find(entry => String(entry.ownerEmail || '').toLowerCase() === lower) || null; }
+    function getSavedSheetByUid(uid) { if (!uid) return null; return currentAllCharacterSheets.find(entry => (entry.pathUid || entry.ownerUid) === uid) || null; }
+    function getApprovedByUid(uid) { if (!uid) return null; return currentApprovedEntries.find(entry => String(entry.playerUid || '') === uid) || null; }
+    function safeInputId(prefix, id) { return `${prefix}-${String(id || '').replace(/[^a-zA-Z0-9_-]/g, '_')}`; }
+
     function renderDMPartyManager() {
       if (!dmPartyList) return;
       const manager = document.getElementById('dmPartyManager');
       if (manager) manager.classList.toggle('hidden', !isDM);
       dmPartyList.innerHTML = '';
       if (!isDM) return;
-      const byEmail = new Map();
-      currentApprovedEntries.forEach(character => {
-        const email = String(character.playerEmail || '').toLowerCase();
-        if (!email) return;
-        byEmail.set(email, { approved: character, sheet: getSavedSheetByEmail(email) });
+
+      const usedSheetUids = new Set();
+      const rows = [];
+
+      currentApprovedEntries.forEach(approved => {
+        const uid = approved.playerUid || '';
+        const sheet = uid ? getSavedSheetByUid(uid) : getSavedSheetByEmail(approved.playerEmail);
+        if (sheet?.pathUid) usedSheetUids.add(sheet.pathUid);
+        rows.push({ approved, sheet });
       });
+
       currentAllCharacterSheets.forEach(sheet => {
-        const email = String(sheet.ownerEmail || '').toLowerCase();
-        if (!email || byEmail.has(email)) return;
-        byEmail.set(email, { approved: getApprovedByEmail(email), sheet });
+        const uid = sheet.pathUid || sheet.ownerUid || '';
+        if (usedSheetUids.has(uid)) return;
+        rows.push({ approved: getApprovedByUid(uid) || getApprovedByEmail(sheet.ownerEmail), sheet });
       });
-      const rows = Array.from(byEmail.values());
+
       if (rows.length === 0) {
         dmPartyList.innerHTML = '<p class="map-note">No approved characters or saved player sheets found yet.</p>';
         return;
       }
+
       rows.forEach(({ approved, sheet }) => {
-        const uid = sheet?.pathUid || sheet?.ownerUid || '';
+        const uid = approved?.playerUid || sheet?.pathUid || sheet?.ownerUid || '';
         const email = approved?.playerEmail || sheet?.ownerEmail || '';
         const name = sheet?.CharacterName || approved?.characterName || 'Unnamed Character';
         const race = sheet?.Race || approved?.race || 'Race not set';
@@ -1560,18 +1570,37 @@
         const level = sheet?.Level ? `Level ${sheet.Level}` : 'Level not set';
         const card = document.createElement('div');
         card.className = 'dm-party-card';
-        const editButton = uid ? `<button class="epic-button" onclick="dmLoadPlayerSheet('${escapeHtml(uid)}')">Edit Full Sheet</button>` : '<p class="form-hint">No saved sheet yet. Have this player log in and click Save Character Sheet once.</p>';
+
+        let uidControls = '';
+        if (approved && !uid) {
+          const inputId = safeInputId('approvedUid', approved.id);
+          uidControls = `
+            <div class="form-area" style="margin-top:0.8rem;">
+              <label class="form-hint" for="${inputId}"><strong>Player Firebase UID needed:</strong> paste this player's Authentication UID so Mason can set up their sheet.</label>
+              <input id="${inputId}" placeholder="Paste player Firebase UID here" />
+              <button class="epic-button" onclick="dmSaveApprovedUid('${escapeHtml(approved.id)}')">Save UID & Start Setup</button>
+            </div>
+          `;
+        }
+
+        const editButton = uid
+          ? `<button class="epic-button" onclick="dmEditOrCreatePlayerSheet('${escapeHtml(uid)}','${escapeHtml(approved?.id || '')}')">Edit / Setup Full Sheet</button>`
+          : '';
         const approvedButton = approved ? `<button class="epic-button" onclick="dmLoadApprovedIntoEditor('${escapeHtml(approved.id)}')">Load Approved Card</button>` : '';
+
         card.innerHTML = `
           <strong>${escapeHtml(name)}</strong>
           <p><span class="tag">${escapeHtml(race)}</span> <span class="tag">${escapeHtml(className)}</span> <span class="tag">${escapeHtml(level)}</span></p>
           <p><strong>Player:</strong> ${escapeHtml(approved?.playerName || sheet?.PlayerName || 'Unknown')}</p>
           <p><strong>Email:</strong> ${escapeHtml(email || 'No email linked')}</p>
+          <p><strong>Firebase UID:</strong> ${escapeHtml(uid || 'Not linked yet')}</p>
+          ${uidControls}
           <div class="request-actions">${editButton}${approvedButton}</div>
         `;
         dmPartyList.appendChild(card);
       });
     }
+
     function setDMEditingBanner() {
       const banner = document.getElementById('dmEditingBanner');
       if (!banner) return;
@@ -1583,25 +1612,9 @@
         banner.textContent = 'DM edit mode inactive.';
       }
     }
-    function dmLoadPlayerSheet(uid) {
-      if (!isDM) return alert('Only the DM can edit other character sheets.');
-      const sheet = currentAllCharacterSheets.find(entry => (entry.pathUid || entry.ownerUid) === uid);
-      if (!sheet) return alert('Could not find that saved sheet. The player may need to save it once first.');
-      dmEditingUid = uid;
-      dmEditingEmail = sheet.ownerEmail || '';
-      fillSheet(sheet);
-      document.getElementById('myCharacterSheet')?.classList.remove('hidden');
-      document.getElementById('myCharacterLocked')?.classList.add('hidden');
-      document.getElementById('myCharacterSaveStatus').textContent = 'Loaded player sheet for DM editing. Changes are not saved until you click Save Character Sheet.';
-      setDMEditingBanner();
-      window.scrollTo({ top: document.getElementById('mycharacter').offsetTop, behavior: 'smooth' });
-    }
-    function dmLoadApprovedIntoEditor(id) {
-      if (!isDM) return alert('Only the DM can do this.');
-      const approved = currentApprovedEntries.find(entry => entry.id === id);
-      if (!approved) return alert('Could not find that approved character.');
-      const sheet = getSavedSheetByEmail(approved.playerEmail);
-      if (sheet?.pathUid) { dmLoadPlayerSheet(sheet.pathUid); }
+
+    function seedSheetFromApproved(approved) {
+      if (!approved) return;
       setSheetValue('sheetCharacterName', approved.characterName || '');
       setSheetValue('sheetPlayerName', approved.playerName || '');
       setSheetValue('sheetRace', approved.race || '');
@@ -1609,7 +1622,45 @@
       setSheetValue('sheetBackground', approved.background || '');
       if (!getSheetValue('sheetBackstory') && approved.concept) setSheetValue('sheetBackstory', approved.concept);
       updateMyClassAdvice();
-      document.getElementById('myCharacterSaveStatus').textContent = sheet?.pathUid ? 'Approved card loaded into saved player sheet. Click Save Character Sheet.' : 'Approved card loaded, but no saved player sheet exists yet. Player must log in and save once before DM can save to their account.';
+      updateDerivedCharacterMath();
+    }
+
+    function dmEditOrCreatePlayerSheet(uid, approvedId = '') {
+      if (!isDM) return alert('Only the DM can edit other character sheets.');
+      if (!uid) return alert('Paste and save this player’s Firebase UID first.');
+      const sheet = getSavedSheetByUid(uid);
+      const approved = approvedId ? currentApprovedEntries.find(entry => entry.id === approvedId) : (getApprovedByUid(uid) || null);
+      dmEditingUid = uid;
+      dmEditingEmail = sheet?.ownerEmail || approved?.playerEmail || '';
+      if (sheet) {
+        fillSheet(sheet);
+        document.getElementById('myCharacterSaveStatus').textContent = 'Loaded saved player sheet for DM editing. Changes are not saved until you click Save Character Sheet.';
+      } else {
+        fillSheet({ ownerUid: uid, ownerEmail: dmEditingEmail });
+        seedSheetFromApproved(approved);
+        document.getElementById('myCharacterSaveStatus').textContent = 'Started a new player sheet from the approved card. Click Save Character Sheet to create it for that player.';
+      }
+      document.getElementById('myCharacterSheet')?.classList.remove('hidden');
+      document.getElementById('myCharacterLocked')?.classList.add('hidden');
+      setDMEditingBanner();
+      window.scrollTo({ top: document.getElementById('mycharacter').offsetTop, behavior: 'smooth' });
+    }
+
+    function dmLoadPlayerSheet(uid) { dmEditOrCreatePlayerSheet(uid); }
+
+    function dmLoadApprovedIntoEditor(id) {
+      if (!isDM) return alert('Only the DM can do this.');
+      const approved = currentApprovedEntries.find(entry => entry.id === id);
+      if (!approved) return alert('Could not find that approved character.');
+      const uid = approved.playerUid || getSavedSheetByEmail(approved.playerEmail)?.pathUid || '';
+      if (uid) {
+        dmEditOrCreatePlayerSheet(uid, id);
+      } else {
+        seedSheetFromApproved(approved);
+        document.getElementById('myCharacterSheet')?.classList.remove('hidden');
+        document.getElementById('myCharacterLocked')?.classList.add('hidden');
+        document.getElementById('myCharacterSaveStatus').textContent = 'Approved card loaded as a draft. Paste/save this player’s Firebase UID in Party Manager before saving to their account.';
+      }
     }
     function dmStopEditingPlayerSheet() {
       dmEditingUid = null;
@@ -1622,7 +1673,7 @@
 
     async function startFirebaseStorage() {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-      const { getFirestore, collection, collectionGroup, addDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      const { getFirestore, collection, collectionGroup, addDoc, deleteDoc, doc, getDoc, setDoc, updateDoc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
       const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
 
       const app = initializeApp(firebaseConfig);
@@ -1701,8 +1752,26 @@
       window.loadApprovedCharacterIntoSheet = loadApprovedCharacterIntoSheet;
       window.updateMyClassAdvice = updateMyClassAdvice;
       window.dmLoadPlayerSheet = dmLoadPlayerSheet;
+      window.dmEditOrCreatePlayerSheet = dmEditOrCreatePlayerSheet;
       window.dmLoadApprovedIntoEditor = dmLoadApprovedIntoEditor;
       window.dmStopEditingPlayerSheet = dmStopEditingPlayerSheet;
+      window.dmSaveApprovedUid = async function (approvedId) {
+        if (!isDM) return alert('Only the DM can link player UIDs.');
+        const inputId = safeInputId('approvedUid', approvedId);
+        const uid = document.getElementById(inputId)?.value.trim();
+        if (!uid) return alert('Paste the player Firebase UID first.');
+        const approved = currentApprovedEntries.find(entry => entry.id === approvedId);
+        await updateDoc(doc(db, "approvedCharacters", approvedId), { playerUid: uid, uidLinkedAt: serverTimestamp() });
+        dmEditingUid = uid;
+        dmEditingEmail = approved?.playerEmail || '';
+        fillSheet({ ownerUid: uid, ownerEmail: dmEditingEmail });
+        seedSheetFromApproved(approved);
+        document.getElementById('myCharacterSheet')?.classList.remove('hidden');
+        document.getElementById('myCharacterLocked')?.classList.add('hidden');
+        document.getElementById('myCharacterSaveStatus').textContent = 'UID linked. Finish setting up this sheet, then click Save Character Sheet so the player can see it.';
+        setDMEditingBanner();
+        window.scrollTo({ top: document.getElementById('mycharacter').offsetTop, behavior: 'smooth' });
+      };
 
 
       window.addSchedule = async function () {
@@ -1761,14 +1830,34 @@
 
       window.dmLogin = function () { alert('Firebase is not connected, so local fallback mode is active.'); };
       window.dmLogout = function () { alert('Firebase is not connected, so local fallback mode is active.'); };
+      window.dmEditOrCreatePlayerSheet = function () { alert('DM setup requires Firebase to be connected.'); };
+      window.dmSaveApprovedUid = function () { alert('DM UID linking requires Firebase to be connected.'); };
       window.playerLogin = function () { currentUser = { email: 'local-player@example.com', uid: 'local-player' }; updatePlayerUI(currentUser); updateLinkedCharacterBanner(); };
       window.playerLogout = function () { currentUser = null; updatePlayerUI(null); };
       window.saveMyCharacterSheet = function () { localStorage.setItem('myCharacterSheet', JSON.stringify(collectSheetData())); document.getElementById('myCharacterSaveStatus').textContent = 'Character sheet saved locally.'; };
       window.loadApprovedCharacterIntoSheet = loadApprovedCharacterIntoSheet;
       window.updateMyClassAdvice = updateMyClassAdvice;
       window.dmLoadPlayerSheet = dmLoadPlayerSheet;
+      window.dmEditOrCreatePlayerSheet = dmEditOrCreatePlayerSheet;
       window.dmLoadApprovedIntoEditor = dmLoadApprovedIntoEditor;
       window.dmStopEditingPlayerSheet = dmStopEditingPlayerSheet;
+      window.dmSaveApprovedUid = async function (approvedId) {
+        if (!isDM) return alert('Only the DM can link player UIDs.');
+        const inputId = safeInputId('approvedUid', approvedId);
+        const uid = document.getElementById(inputId)?.value.trim();
+        if (!uid) return alert('Paste the player Firebase UID first.');
+        const approved = currentApprovedEntries.find(entry => entry.id === approvedId);
+        await updateDoc(doc(db, "approvedCharacters", approvedId), { playerUid: uid, uidLinkedAt: serverTimestamp() });
+        dmEditingUid = uid;
+        dmEditingEmail = approved?.playerEmail || '';
+        fillSheet({ ownerUid: uid, ownerEmail: dmEditingEmail });
+        seedSheetFromApproved(approved);
+        document.getElementById('myCharacterSheet')?.classList.remove('hidden');
+        document.getElementById('myCharacterLocked')?.classList.add('hidden');
+        document.getElementById('myCharacterSaveStatus').textContent = 'UID linked. Finish setting up this sheet, then click Save Character Sheet so the player can see it.';
+        setDMEditingBanner();
+        window.scrollTo({ top: document.getElementById('mycharacter').offsetTop, behavior: 'smooth' });
+      };
 
       window.addSchedule = function () {
         const data = getScheduleFormData();
