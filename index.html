@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ma<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chronicles of the Dawnward</title>
+  <title>Chronicles of the Dawnward Realms</title>
 
   <style>
     :root {
@@ -626,6 +626,47 @@
       font-size: 0.95rem;
     }
 
+    .dm-panel {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 18px;
+      border: 1px solid rgba(244,216,138,0.25);
+      background: rgba(0,0,0,0.32);
+    }
+
+    .dm-panel h3 { color: var(--gold); margin-bottom: 0.5rem; }
+
+    .dm-login-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 0.7rem;
+      align-items: center;
+      margin-top: 0.8rem;
+    }
+
+    .dm-status { margin-top: 0.75rem; color: #d8cba9; line-height: 1.5; font-size: 0.95rem; }
+
+    .approved-character-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+
+    .approved-character-card {
+      position: relative;
+      padding: 1.2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(244,216,138,0.42);
+      background: linear-gradient(135deg, rgba(37,29,14,0.78), rgba(7,7,7,0.68)), radial-gradient(circle at 85% 15%, rgba(244,216,138,0.16), transparent 12rem);
+      box-shadow: inset 0 0 34px rgba(255,255,255,0.035);
+      overflow: hidden;
+    }
+
+    .approved-character-card h3 { color: var(--bright-gold); margin-bottom: 0.5rem; font-size: 1.35rem; }
+    .approved-character-card p { color: #efe6c9; line-height: 1.55; }
+    .request-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.7rem; }
+    .approve-button { color: #160e07; background: linear-gradient(180deg, #d9f48a, #8aa14d); }
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) { .dm-login-row { grid-template-columns: 1fr; } }
+
+
     footer {
       position: relative;
       z-index: 4;
@@ -690,7 +731,7 @@
 
   <header>
     <div class="sigil"><span>✦</span></div>
-    <h1>Chronicles of the Dawnward</h1>
+    <h1>Chronicles of the Dawnward Realms</h1>
     <p class="subtitle">
       Across wine-dark seas, ancient roads, and starlit kingdoms, the free peoples gather their banners.
       Beyond the mountains, a nameless shadow crawls closer.
@@ -708,81 +749,70 @@
   </nav>
 
   <main>
-<!-- ONLY SHOWING MODIFIED SECTION FOR CLARITY -->
-<!-- Replace JUST your <section id="home"> with this -->
-
-<section id="home" class="active">
-  <div class="panel hero-banner">
-    <div>
-      <span class="tag">A Story Not Yet Told</span>
-      <h2>The Age Before the Storm</h2>
-      <p class="lead">
-        The roads are quiet, the taverns whisper, and old maps show names no one remembers.
-        Somewhere beyond the known borders, something stirs — but for now, the truth remains hidden beneath rumor, omen, and ash.
-      </p>
-      <div class="button-row">
-        <button class="epic-button" onclick="openTab('quests')">View Rumors</button>
-        <button class="epic-button" onclick="openTab('map')">Explore the Realm</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="home-columns">
-    <div class="panel">
-      <h2>The Unwritten Road</h2>
-      <p class="lead">
-        No grand alliance has formed. No final battle has been named. The world waits in uneasy silence,
-        and the choices of a few wandering souls may decide which legends are remembered — and which are buried.
-      </p>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Rumors in Low Voices</h3>
-          <p>
-            Strange fires, missing travelers, sealed ruins, and old songs have begun to trouble the edges of ordinary life.
+    <section id="home" class="active">
+      <div class="panel hero-banner">
+        <div>
+          <span class="tag">The Alliance Must Rise</span>
+          <h2>The Age of Gathering Storms</h2>
+          <p class="lead">
+            The beacons of the kingdoms burn once more. From island-temples and green halls to mountain keeps and ancient ruins,
+            heroes are summoned to bind fractured realms into one last fellowship before the shadow reaches the gates of the world.
           </p>
-        </div>
-
-        <div class="card">
-          <h3>Places Half-Remembered</h3>
-          <p>
-            Beyond the safety of familiar roads lie forgotten keeps, nameless forests, broken shrines, and lands left blank on every honest map.
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>Heroes Unproven</h3>
-          <p>
-            The tale has not chosen its champions yet. For now, there are only travelers, choices, debts, secrets, and the first signs of trouble.
-          </p>
+          <div class="button-row">
+            <button class="epic-button" onclick="openTab('quests')">View Open Quests</button>
+            <button class="epic-button" onclick="openTab('map')">Explore the Realm</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <aside class="darkness-meter">
-      <span class="tag">Something Is Stirring</span>
-      <h3>The Shadow Unnamed</h3>
-      <div class="meter-track"><div class="meter-fill"></div></div>
-      <p>
-        No one agrees on what is coming. Some call it weather. Some call it war.
-        Others refuse to speak of it at all.
-      </p>
-    </aside>
-  </div>
-</section>
+      <div class="home-columns">
+        <div class="panel">
+          <h2>The Call</h2>
+          <p class="lead">
+            Long ago, the elder kings sealed the Abyssal Host beneath black stone and oath-bound magic.
+            Now the seals are failing. The realms must unite — not as rivals, but as one shield against the night.
+          </p>
+          <div class="grid">
+            <div class="card">
+              <h3>Kingdoms of Light</h3>
+              <p>High towers, forest realms, sea-kings, and wandering clans answer the same desperate summons.</p>
+            </div>
+            <div class="card">
+              <h3>Epic Voyages</h3>
+              <p>Ancient ships cross mythic waters, chasing prophecies, relics, monsters, and impossible homecomings.</p>
+            </div>
+            <div class="card">
+              <h3>The Fellowship Flame</h3>
+              <p>Every hero carries a spark. Together, they may become a dawn bright enough to wound the dark.</p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="darkness-meter">
+          <span class="tag">Encroaching Darkness</span>
+          <h3>The Shadow’s Reach</h3>
+          <div class="meter-track"><div class="meter-fill"></div></div>
+          <p>
+            Whispers from the north. Red stars over ruined temples. Dreams of a crown made of ash.
+            The darkness is not here yet — but it is learning the road.
+          </p>
+        </aside>
+      </div>
+    </section>
 
     <section id="map">
       <div class="panel">
         <h2>Map of the Realms</h2>
         <p class="lead">
-          Click each pin for location notes - new locations added once discovered.
+          Add your own map by uploading <strong>images/map.jpg</strong> to your GitHub repo. The location pins will remain clickable on top of the map.
+          Click each pin for location notes, then adjust each pin’s left/top percentages to match your image.
         </p>
         <div class="map-frame">
-          <button class="location-pin" style="left: 23%; top: 38%;" onclick="showLocation('The Shattered Cliffs', 'A broken coastline of vast, plunging ridges where faint light glows from far below. No one agrees what shines in the depths—but the wind carries whispers from beneath.')">The Shattered Cliffs</button>
-          <button class="location-pin" style="left: 48%; top: 50%;" onclick="showLocation('Umbra Fall', 'A great capital of stone and crown, where the people once stood against the darkness—and prevailed. The victory is not spoken of, but the kingdom still stands because of it.')">Umbra Fall</button>
-          <button class="location-pin" style="left: 68%; top: 40%;" onclick="showLocation('Town of Cerrbus', 'A quiet farming town of hardworking, ordinary folk. No glory, no grandeur—just steady lives and the kind of strength that endures.')">Town of Cerrbus</button>
-          <button class="location-pin" style="left: 85%; top: 80%;" onclick="showLocation('Windless Forest', 'A lush, untouched forest ringed by burn scars. No wind stirs within—and no one who enters is ever seen again.')">Windless Forest</button>
-          <button class="location-pin" style="left: 15%; top: 76%;" onclick="showLocation('The Grey Sea', 'An ocean turned to ash-gray after ancient fires scarred its waters. Still, silent, and avoided by most who know its history.')">The Grey Sea</button>
+          <button class="location-pin" style="left: 23%; top: 38%;" onclick="showLocation('The Shattered Cliffs', 'Marble harbors, oracle-temples, bronze ships, and sea winds carrying old prophecies.')">The Shattered Cliffs</button>
+          <button class="location-pin" style="left: 48%; top: 50%;" onclick="showLocation('Umbra Fall', 'An ancient woodland realm where elf-lords, rangers, and talking stones guard forgotten roads.')">Umbra Fall</button>
+          <button class="location-pin" style="left: 68%; top: 40%;" onclick="showLocation('Town of Cerrbus', 'The high seat of mortal kings, where banners gather beneath a golden tower.')">Town of Cerrbus</button>
+          <button class="location-pin" style="left: 85%; top: 80%;" onclick="showLocation('Windless Forest', 'Ash fields, broken fortresses, and the first visible signs of the creeping darkness.')">Windless Forest</button>
+          <button class="location-pin" style="left: 15%; top: 76%;" onclick="showLocation('The Grey Sea', 'Storm-ringed islands said to be watched by gods, sirens, and drowned heroes.')">The Grey Sea</button>
         </div>
         <p id="locationInfo" class="map-note">Select a location to reveal its legend.</p>
       </div>
@@ -792,15 +822,29 @@
       <div class="panel">
         <h2>Heroes, Allies, and Shadows</h2>
         <p class="lead">
-          Use these cards for player characters, important NPCs, rivals, patrons, and suspicious strangers.
-          Party members can also submit a character request below for DM approval.
+          Approved player characters appear here once the DM accepts a request. Party members can submit new character requests below.
         </p>
 
-        <div class="grid">
-          <div class="card"><span class="tag">Player Character</span><h3>EXAMPLE</h3><p><strong>Class:</strong> Paladin / Ranger / Wizard / etc.</p><p><strong>Known For:</strong> A sacred oath, a broken crown, or a prophecy they refuse to believe.</p></div>
-          <div class="card"><span class="tag">NPC Ally</span><h3>EXAMPLE</h3><p>A ruler trying to unite proud kingdoms before fear divides them forever.</p></div>
-          <div class="card"><span class="tag">NPC Guide</span><h3>EXAMPLE</h3><p>An old voyager who knows the wine-dark sea, but refuses to speak of his final journey.</p></div>
-          <div class="card"><span class="tag">Enemy</span><h3>EXAMPLE</h3><p>A cloaked messenger of the dark, seen wherever alliances begin to fracture.</p></div>
+        <div class="panel inner-panel">
+          <span class="tag">Approved Characters</span>
+          <h2>The Fellowship</h2>
+          <p class="lead">These are the characters approved for play in the campaign.</p>
+          <div id="approvedCharacterList" class="approved-character-grid"></div>
+        </div>
+
+        <div class="dm-panel">
+          <span class="tag">DM Controls</span>
+          <h3>Dungeon Master Login</h3>
+          <p class="form-hint">Only the DM account can approve character requests, remove approved characters, or delete submissions.</p>
+          <div id="dmLoginArea" class="dm-login-row">
+            <input id="dmEmail" type="email" placeholder="DM email" />
+            <input id="dmPassword" type="password" placeholder="DM password" />
+            <button class="epic-button" onclick="dmLogin()">DM Login</button>
+          </div>
+          <div id="dmLoggedInArea" class="button-row hidden">
+            <button class="epic-button danger-button" onclick="dmLogout()">Log Out DM</button>
+          </div>
+          <p id="dmStatus" class="dm-status">DM is not logged in. Character approvals are hidden.</p>
         </div>
 
         <div class="panel inner-panel">
@@ -815,9 +859,10 @@
             <select id="requestClass"><option value="">Choose Class</option><option>Barbarian</option><option>Bard</option><option>Cleric</option><option>Druid</option><option>Fighter</option><option>Monk</option><option>Paladin</option><option>Ranger</option><option>Rogue</option><option>Sorcerer</option><option>Warlock</option><option>Wizard</option><option>Artificer</option><option>Blood Hunter / Ask DM</option></select>
             <select id="requestBackground"><option value="">Choose Background</option><option>Acolyte</option><option>Charlatan</option><option>Criminal</option><option>Entertainer</option><option>Folk Hero</option><option>Guild Artisan</option><option>Hermit</option><option>Noble</option><option>Outlander</option><option>Sage</option><option>Sailor</option><option>Soldier</option><option>Urchin</option><option>Haunted One</option><option>Far Traveler</option><option>Knight</option><option>Pirate</option><option>Custom / Ask DM</option></select>
             <textarea id="requestConcept" placeholder="Character concept, backstory idea, oath, secret, reason they joined the fellowship, or subclass request"></textarea>
-            <p class="form-hint">Do not remove other players submissions.</p>
+            <p class="form-hint">Requests remain pending until Mason approves them.</p>
             <button class="epic-button" onclick="submitCharacterRequest()">Submit Character Request</button>
           </div>
+          <h2 style="margin-top: 1.5rem;">Pending Requests</h2>
           <div id="characterRequestList" class="schedule-list"></div>
         </div>
       </div>
@@ -837,8 +882,8 @@
             <p>This story has yet to be told.</p>
           </div>
           <div class="card">
-            <h3>???</h3>
-            <p>???</p>
+            <h3>????</h3>
+            <p>A mythic ocean of monsters, divine omens, ghost ships, and islands that appear only under certain stars.</p>
           </div>
           <div class="card">
             <h3>Rise</h3>
@@ -905,7 +950,7 @@
 
   <footer>
     <p class="footer-darkness">Something ancient stirs below the roots of the world...</p>
-    <p>Chronicles of the Dawnward • A campaign of kingdoms, omens, voyages, and fellowship.</p>
+    <p>Chronicles of the Dawnward Realms • A campaign of kingdoms, omens, voyages, and fellowship.</p>
   </footer>
 
   <script>
@@ -962,6 +1007,12 @@
     const usingFirebase = !firebaseConfig.apiKey.includes("PASTE_");
     const scheduleList = document.getElementById('scheduleList');
     const characterRequestList = document.getElementById('characterRequestList');
+    const approvedCharacterList = document.getElementById('approvedCharacterList');
+    const DM_UID = 'DIHVuUbH7tTYoPJeioF6SRW51dI3';
+    let isDM = false;
+    let currentScheduleEntries = [];
+    let currentRequestEntries = [];
+    let currentApprovedEntries = [];
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -1019,44 +1070,86 @@
       return { playerName, characterName, race, sex, characterClass, background, concept };
     }
 
-    function renderSchedule(entries, removeHandlerName) {
-      scheduleList.innerHTML = '';
+    function updateDMUI(user) {
+      const dmLoginArea = document.getElementById('dmLoginArea');
+      const dmLoggedInArea = document.getElementById('dmLoggedInArea');
+      const dmStatus = document.getElementById('dmStatus');
+      if (!dmLoginArea || !dmLoggedInArea || !dmStatus) return;
+      if (isDM) {
+        dmLoginArea.classList.add('hidden');
+        dmLoggedInArea.classList.remove('hidden');
+        dmStatus.textContent = `DM logged in as ${user?.email || 'authorized user'}. Approve and remove controls are active.`;
+      } else {
+        dmLoginArea.classList.remove('hidden');
+        dmLoggedInArea.classList.add('hidden');
+        dmStatus.textContent = user ? 'You are logged in, but this account is not the DM account.' : 'DM is not logged in. Character approvals are hidden.';
+      }
+    }
 
+    function renderSchedule(entries, removeHandlerName) {
+      currentScheduleEntries = entries || [];
+      scheduleList.innerHTML = '';
       if (!entries || entries.length === 0) {
         scheduleList.innerHTML = '<p class="map-note">No availability added yet. Be the first hero to answer the call.</p>';
         return;
       }
-
       entries.forEach((entry, index) => {
         const card = document.createElement('div');
         card.className = 'date-card';
         const removeTarget = entry.id || index;
-
+        const removeButton = isDM ? `<button class="epic-button danger-button" onclick="${removeHandlerName}('${removeTarget}')">Remove</button>` : '';
         card.innerHTML = `
           <div>
             <strong>${escapeHtml(entry.name)}</strong> — ${escapeHtml(entry.date)} — <span class="tag">${escapeHtml(entry.availability)}</span>
             <p>${escapeHtml(entry.note || 'No note added.')}</p>
           </div>
-          <button class="epic-button danger-button" onclick="${removeHandlerName}('${removeTarget}')">Remove</button>
+          ${removeButton}
         `;
-
         scheduleList.appendChild(card);
       });
     }
 
-    function renderCharacterRequests(entries, removeHandlerName) {
-      characterRequestList.innerHTML = '';
+    function renderApprovedCharacters(entries, removeHandlerName) {
+      currentApprovedEntries = entries || [];
+      approvedCharacterList.innerHTML = '';
+      if (!entries || entries.length === 0) {
+        approvedCharacterList.innerHTML = '<p class="map-note">No approved characters yet. Approved heroes will appear here.</p>';
+        return;
+      }
+      entries.forEach((entry, index) => {
+        const card = document.createElement('div');
+        card.className = 'approved-character-card';
+        const removeTarget = entry.id || index;
+        const removeButton = isDM ? `<div class="request-actions"><button class="epic-button danger-button" onclick="${removeHandlerName}('${removeTarget}')">Remove Character</button></div>` : '';
+        card.innerHTML = `
+          <span class="tag">Player Character</span>
+          <h3>${escapeHtml(entry.characterName)}</h3>
+          <p><strong>Player:</strong> ${escapeHtml(entry.playerName)}</p>
+          <p>
+            <span class="tag">${escapeHtml(entry.race)}</span>
+            <span class="tag">${escapeHtml(entry.sex)}</span>
+            <span class="tag">${escapeHtml(entry.characterClass)}</span>
+            <span class="tag">${escapeHtml(entry.background)}</span>
+          </p>
+          <p>${escapeHtml(entry.concept || 'No concept added.')}</p>
+          ${removeButton}
+        `;
+        approvedCharacterList.appendChild(card);
+      });
+    }
 
+    function renderCharacterRequests(entries, removeHandlerName, approveHandlerName) {
+      currentRequestEntries = entries || [];
+      characterRequestList.innerHTML = '';
       if (!entries || entries.length === 0) {
         characterRequestList.innerHTML = '<p class="map-note">No character requests yet. The fellowship awaits its first petition.</p>';
         return;
       }
-
       entries.forEach((entry, index) => {
         const card = document.createElement('div');
         card.className = 'request-card';
-        const removeTarget = entry.id || index;
-
+        const requestId = entry.id || index;
+        const dmActions = isDM ? `<div class="request-actions"><button class="epic-button approve-button" onclick="${approveHandlerName}('${requestId}')">Approve Character</button><button class="epic-button danger-button" onclick="${removeHandlerName}('${requestId}')">Remove Request</button></div>` : '';
         card.innerHTML = `
           <strong>${escapeHtml(entry.characterName)}</strong>
           <p>
@@ -1067,38 +1160,31 @@
           </p>
           <p><strong>Player:</strong> ${escapeHtml(entry.playerName)}</p>
           <p>${escapeHtml(entry.concept || 'No concept added.')}</p>
-          <button class="epic-button danger-button" onclick="${removeHandlerName}('${removeTarget}')">Remove</button>
+          ${dmActions}
         `;
-
         characterRequestList.appendChild(card);
       });
     }
 
     async function startFirebaseStorage() {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-      const {
-        getFirestore,
-        collection,
-        addDoc,
-        deleteDoc,
-        doc,
-        onSnapshot,
-        serverTimestamp,
-        query,
-        orderBy
-      } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
-    
-      const {
-      getAuth,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged
-    } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+      const { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+      const auth = getAuth(app);
       const scheduleRef = collection(db, "schedule");
       const characterRequestsRef = collection(db, "characterRequests");
+      const approvedCharactersRef = collection(db, "approvedCharacters");
+
+      onAuthStateChanged(auth, user => {
+        isDM = !!user && user.uid === DM_UID;
+        updateDMUI(user);
+        renderSchedule(currentScheduleEntries, "removeFirebaseSchedule");
+        renderCharacterRequests(currentRequestEntries, "removeFirebaseCharacterRequest", "approveFirebaseCharacterRequest");
+        renderApprovedCharacters(currentApprovedEntries, "removeFirebaseApprovedCharacter");
+      });
 
       onSnapshot(query(scheduleRef, orderBy("createdAt", "desc")), snapshot => {
         const entries = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
@@ -1107,8 +1193,28 @@
 
       onSnapshot(query(characterRequestsRef, orderBy("createdAt", "desc")), snapshot => {
         const entries = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
-        renderCharacterRequests(entries, "removeFirebaseCharacterRequest");
+        renderCharacterRequests(entries, "removeFirebaseCharacterRequest", "approveFirebaseCharacterRequest");
       });
+
+      onSnapshot(query(approvedCharactersRef, orderBy("approvedAt", "desc")), snapshot => {
+        const entries = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+        renderApprovedCharacters(entries, "removeFirebaseApprovedCharacter");
+      });
+
+      window.dmLogin = async function () {
+        const email = document.getElementById('dmEmail').value.trim();
+        const password = document.getElementById('dmPassword').value;
+        if (!email || !password) return alert('Please enter the DM email and password.');
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          document.getElementById('dmPassword').value = '';
+        } catch (error) {
+          alert('DM login failed. Check the email/password and make sure Email/Password login is enabled in Firebase Authentication.');
+          console.error(error);
+        }
+      };
+
+      window.dmLogout = async function () { await signOut(auth); };
 
       window.addSchedule = async function () {
         const data = getScheduleFormData();
@@ -1118,6 +1224,7 @@
       };
 
       window.removeFirebaseSchedule = async function (id) {
+        if (!isDM) return alert('Only the DM can remove schedule entries.');
         await deleteDoc(doc(db, "schedule", id));
       };
 
@@ -1128,30 +1235,42 @@
         clearCharacterRequestForm();
       };
 
-      window.removeFirebaseCharacterRequest = async function (id) {
+      window.approveFirebaseCharacterRequest = async function (id) {
+        if (!isDM) return alert('Only the DM can approve characters.');
+        const request = currentRequestEntries.find(entry => entry.id === id);
+        if (!request) return alert('Could not find that request. Refresh and try again.');
+        const { id: oldId, createdAt, status, ...characterData } = request;
+        await addDoc(approvedCharactersRef, { ...characterData, status: "Approved", approvedAt: serverTimestamp() });
         await deleteDoc(doc(db, "characterRequests", id));
+      };
+
+      window.removeFirebaseCharacterRequest = async function (id) {
+        if (!isDM) return alert('Only the DM can remove character requests.');
+        await deleteDoc(doc(db, "characterRequests", id));
+      };
+
+      window.removeFirebaseApprovedCharacter = async function (id) {
+        if (!isDM) return alert('Only the DM can remove approved characters.');
+        await deleteDoc(doc(db, "approvedCharacters", id));
       };
     }
 
     function startLocalFallbackStorage() {
       let savedSchedule = JSON.parse(localStorage.getItem('dndSchedule') || '[]');
       let savedCharacterRequests = JSON.parse(localStorage.getItem('characterRequests') || '[]');
+      let savedApprovedCharacters = JSON.parse(localStorage.getItem('approvedCharacters') || '[]');
+      isDM = true;
+      updateDMUI({ email: 'local fallback DM' });
 
-      function saveLocalSchedule() {
-        localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule));
-      }
+      function saveLocalSchedule() { localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule)); }
+      function saveLocalCharacterRequests() { localStorage.setItem('characterRequests', JSON.stringify(savedCharacterRequests)); }
+      function saveLocalApprovedCharacters() { localStorage.setItem('approvedCharacters', JSON.stringify(savedApprovedCharacters)); }
+      function renderLocalSchedule() { renderSchedule(savedSchedule, "removeLocalSchedule"); }
+      function renderLocalCharacterRequests() { renderCharacterRequests(savedCharacterRequests, "removeLocalCharacterRequest", "approveLocalCharacterRequest"); }
+      function renderLocalApprovedCharacters() { renderApprovedCharacters(savedApprovedCharacters, "removeLocalApprovedCharacter"); }
 
-      function saveLocalCharacterRequests() {
-        localStorage.setItem('characterRequests', JSON.stringify(savedCharacterRequests));
-      }
-
-      function renderLocalSchedule() {
-        renderSchedule(savedSchedule, "removeLocalSchedule");
-      }
-
-      function renderLocalCharacterRequests() {
-        renderCharacterRequests(savedCharacterRequests, "removeLocalCharacterRequest");
-      }
+      window.dmLogin = function () { alert('Firebase is not connected, so local fallback mode is active.'); };
+      window.dmLogout = function () { alert('Firebase is not connected, so local fallback mode is active.'); };
 
       window.addSchedule = function () {
         const data = getScheduleFormData();
@@ -1163,8 +1282,7 @@
       };
 
       window.removeLocalSchedule = function (indexText) {
-        const index = Number(indexText);
-        savedSchedule.splice(index, 1);
+        savedSchedule.splice(Number(indexText), 1);
         saveLocalSchedule();
         renderLocalSchedule();
       };
@@ -1178,15 +1296,33 @@
         clearCharacterRequestForm();
       };
 
-      window.removeLocalCharacterRequest = function (indexText) {
+      window.approveLocalCharacterRequest = function (indexText) {
         const index = Number(indexText);
+        const request = savedCharacterRequests[index];
+        if (!request) return;
+        savedApprovedCharacters.unshift({ ...request, status: "Approved" });
         savedCharacterRequests.splice(index, 1);
+        saveLocalApprovedCharacters();
+        saveLocalCharacterRequests();
+        renderLocalApprovedCharacters();
+        renderLocalCharacterRequests();
+      };
+
+      window.removeLocalCharacterRequest = function (indexText) {
+        savedCharacterRequests.splice(Number(indexText), 1);
         saveLocalCharacterRequests();
         renderLocalCharacterRequests();
       };
 
+      window.removeLocalApprovedCharacter = function (indexText) {
+        savedApprovedCharacters.splice(Number(indexText), 1);
+        saveLocalApprovedCharacters();
+        renderLocalApprovedCharacters();
+      };
+
       renderLocalSchedule();
       renderLocalCharacterRequests();
+      renderLocalApprovedCharacters();
     }
 
     if (usingFirebase) {
