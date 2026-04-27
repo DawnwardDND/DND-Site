@@ -696,6 +696,14 @@
     .field label { color: var(--bright-gold); font-size: 0.86rem; letter-spacing: 0.03em; }
     .field .readonly-display { opacity: 0.95; }
     .ability-mod { display: inline-block; margin-bottom: 0.45rem; color: #f6eac6; font-size: 1.25rem; font-weight: bold; }
+
+    .skill-list { display: grid; gap: 0.35rem; margin-top: 0.75rem; text-align: left; }
+    .skill-row { display: grid; grid-template-columns: 22px 1fr auto; gap: 0.45rem; align-items: center; color: #efe6c9; font-size: 0.9rem; cursor: pointer; }
+    .skill-row input { position: absolute; opacity: 0; pointer-events: none; }
+    .prof-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(244,216,138,0.68); display: inline-block; box-shadow: inset 0 0 8px rgba(0,0,0,0.5); }
+    .skill-row input:checked + .prof-dot { background: var(--bright-gold); box-shadow: 0 0 12px rgba(244,216,138,0.55), inset 0 0 4px rgba(0,0,0,0.45); }
+    .skill-total { color: var(--bright-gold); font-weight: bold; min-width: 2.2rem; text-align: right; }
+    .skill-source { color: #d8cba9; font-size: 0.78rem; opacity: 0.88; }
     .sheet-helper { margin-top: 0.75rem; padding: 0.85rem 1rem; border-radius: 14px; border: 1px solid rgba(244,216,138,0.22); background: rgba(0,0,0,0.24); color: #d8cba9; line-height: 1.55; font-size: 0.95rem; }
     .sheet-helper strong { color: var(--bright-gold); }
     .login-panel { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.32); }
@@ -975,12 +983,54 @@
           <div id="classAdvice" class="class-advice"><strong>Class help:</strong> Select or link a class to see reminders for your character.</div>
           <div class="button-row"><button class="epic-button" onclick="loadApprovedCharacterIntoSheet()">Use My Approved Character</button><button class="epic-button" onclick="saveMyCharacterSheet()">Save Character Sheet</button></div>
           <div class="sheet-grid">
-            <div class="sheet-box sheet-wide"><h3>Identity</h3><div class="mini-grid"><div class="field"><label for="sheetCharacterName">Character Name</label><input id="sheetCharacterName" /></div><div class="field"><label for="sheetPlayerName">Player Name</label><input id="sheetPlayerName" /></div><div class="field"><label for="sheetRace">Race / Species</label><input id="sheetRace" /></div><div class="field"><label for="sheetClass">Class</label><input id="sheetClass" oninput="updateMyClassAdvice(); updateDerivedCharacterMath();" /></div><div class="field"><label for="sheetSubclass">Subclass / Archetype</label><input id="sheetSubclass" /></div><div class="field"><label for="sheetLevel">Level</label><input id="sheetLevel" type="number" min="1" max="20" oninput="updateDerivedCharacterMath()" /></div><div class="field"><label for="sheetBackground">Background</label><input id="sheetBackground" /></div><div class="field"><label for="sheetAlignment">Alignment</label><input id="sheetAlignment" /></div><div class="field"><label for="sheetExperience">Experience Points</label><input id="sheetExperience" /></div></div><div class="sheet-helper"><strong>Beginner note:</strong> Your proficiency bonus is based on total character level, not class. Levels 1–4: +2, 5–8: +3, 9–12: +4, 13–16: +5, 17–20: +6.</div></div>
-            <div class="sheet-box sheet-wide"><h3>Core Stats</h3><div class="mini-grid"><div class="ability-card"><label>STR</label><span id="sheetStrengthMod" class="ability-mod">+0</span><input id="sheetStrength" type="number" placeholder="10" /></div><div class="ability-card"><label>DEX</label><span id="sheetDexterityMod" class="ability-mod">+0</span><input id="sheetDexterity" type="number" placeholder="10" /></div><div class="ability-card"><label>CON</label><span id="sheetConstitutionMod" class="ability-mod">+0</span><input id="sheetConstitution" type="number" placeholder="10" /></div><div class="ability-card"><label>INT</label><span id="sheetIntelligenceMod" class="ability-mod">+0</span><input id="sheetIntelligence" type="number" placeholder="10" /></div><div class="ability-card"><label>WIS</label><span id="sheetWisdomMod" class="ability-mod">+0</span><input id="sheetWisdom" type="number" placeholder="10" /></div><div class="ability-card"><label>CHA</label><span id="sheetCharismaMod" class="ability-mod">+0</span><input id="sheetCharisma" type="number" placeholder="10" /></div></div><div class="sheet-helper"><strong>Modifier formula:</strong> Ability modifier = floor((score - 10) / 2). Example: 12 gives +1, 14 gives +2, 8 gives -1.</div></div>
+            <div class="sheet-box sheet-wide"><h3>Identity</h3><div class="mini-grid"><div class="field"><label for="sheetCharacterName">Character Name</label><input id="sheetCharacterName" /></div><div class="field"><label for="sheetPlayerName">Player Name</label><input id="sheetPlayerName" /></div><div class="field"><label for="sheetRace">Race / Species</label><input id="sheetRace" /></div><div class="field"><label for="sheetClass">Class</label><input id="sheetClass" oninput="updateMyClassAdvice(); updateDerivedCharacterMath();" /></div><div class="field"><label for="sheetSubclass">Subclass / Archetype</label><input id="sheetSubclass" /></div><div class="field"><label for="sheetLevel">Level</label><input id="sheetLevel" type="number" min="1" max="20" oninput="updateDerivedCharacterMath()" /></div><div class="field"><label for="sheetBackground">Background</label><input id="sheetBackground" /></div><div class="field"><label for="sheetAlignment">Alignment</label><input id="sheetAlignment" /></div></div><div class="sheet-helper"><strong>Beginner note:</strong> Your proficiency bonus is based on total character level, not class. Levels 1–4: +2, 5–8: +3, 9–12: +4, 13–16: +5, 17–20: +6.</div></div>
+            <div class="sheet-box sheet-wide"><h3>Core Stats & Skills</h3><div class="mini-grid">
+              <div class="ability-card"><label>STR</label><span id="sheetStrengthMod" class="ability-mod">+0</span><input id="sheetStrength" type="number" placeholder="10" />
+                <div class="skill-list">
+                  <label class="skill-row"><input id="skillAthletics" type="checkbox" /><span class="prof-dot"></span><span>Athletics <span class="skill-source">STR</span></span><span id="skillAthleticsTotal" class="skill-total">+0</span></label>
+                </div>
+              </div>
+              <div class="ability-card"><label>DEX</label><span id="sheetDexterityMod" class="ability-mod">+0</span><input id="sheetDexterity" type="number" placeholder="10" />
+                <div class="skill-list">
+                  <label class="skill-row"><input id="skillAcrobatics" type="checkbox" /><span class="prof-dot"></span><span>Acrobatics <span class="skill-source">DEX</span></span><span id="skillAcrobaticsTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillSleightOfHand" type="checkbox" /><span class="prof-dot"></span><span>Sleight of Hand <span class="skill-source">DEX</span></span><span id="skillSleightOfHandTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillStealth" type="checkbox" /><span class="prof-dot"></span><span>Stealth <span class="skill-source">DEX</span></span><span id="skillStealthTotal" class="skill-total">+0</span></label>
+                </div>
+              </div>
+              <div class="ability-card"><label>CON</label><span id="sheetConstitutionMod" class="ability-mod">+0</span><input id="sheetConstitution" type="number" placeholder="10" />
+                <div class="skill-list"><p class="skill-source">No standard 5e skills use CON.</p></div>
+              </div>
+              <div class="ability-card"><label>INT</label><span id="sheetIntelligenceMod" class="ability-mod">+0</span><input id="sheetIntelligence" type="number" placeholder="10" />
+                <div class="skill-list">
+                  <label class="skill-row"><input id="skillArcana" type="checkbox" /><span class="prof-dot"></span><span>Arcana <span class="skill-source">INT</span></span><span id="skillArcanaTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillHistory" type="checkbox" /><span class="prof-dot"></span><span>History <span class="skill-source">INT</span></span><span id="skillHistoryTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillInvestigation" type="checkbox" /><span class="prof-dot"></span><span>Investigation <span class="skill-source">INT</span></span><span id="skillInvestigationTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillNature" type="checkbox" /><span class="prof-dot"></span><span>Nature <span class="skill-source">INT</span></span><span id="skillNatureTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillReligion" type="checkbox" /><span class="prof-dot"></span><span>Religion <span class="skill-source">INT</span></span><span id="skillReligionTotal" class="skill-total">+0</span></label>
+                </div>
+              </div>
+              <div class="ability-card"><label>WIS</label><span id="sheetWisdomMod" class="ability-mod">+0</span><input id="sheetWisdom" type="number" placeholder="10" />
+                <div class="skill-list">
+                  <label class="skill-row"><input id="skillAnimalHandling" type="checkbox" /><span class="prof-dot"></span><span>Animal Handling <span class="skill-source">WIS</span></span><span id="skillAnimalHandlingTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillInsight" type="checkbox" /><span class="prof-dot"></span><span>Insight <span class="skill-source">WIS</span></span><span id="skillInsightTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillMedicine" type="checkbox" /><span class="prof-dot"></span><span>Medicine <span class="skill-source">WIS</span></span><span id="skillMedicineTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillPerception" type="checkbox" /><span class="prof-dot"></span><span>Perception <span class="skill-source">WIS</span></span><span id="skillPerceptionTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillSurvival" type="checkbox" /><span class="prof-dot"></span><span>Survival <span class="skill-source">WIS</span></span><span id="skillSurvivalTotal" class="skill-total">+0</span></label>
+                </div>
+              </div>
+              <div class="ability-card"><label>CHA</label><span id="sheetCharismaMod" class="ability-mod">+0</span><input id="sheetCharisma" type="number" placeholder="10" />
+                <div class="skill-list">
+                  <label class="skill-row"><input id="skillDeception" type="checkbox" /><span class="prof-dot"></span><span>Deception <span class="skill-source">CHA</span></span><span id="skillDeceptionTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillIntimidation" type="checkbox" /><span class="prof-dot"></span><span>Intimidation <span class="skill-source">CHA</span></span><span id="skillIntimidationTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillPerformance" type="checkbox" /><span class="prof-dot"></span><span>Performance <span class="skill-source">CHA</span></span><span id="skillPerformanceTotal" class="skill-total">+0</span></label>
+                  <label class="skill-row"><input id="skillPersuasion" type="checkbox" /><span class="prof-dot"></span><span>Persuasion <span class="skill-source">CHA</span></span><span id="skillPersuasionTotal" class="skill-total">+0</span></label>
+                </div>
+              </div>
+            </div><div class="sheet-helper"><strong>Modifier formula:</strong> Ability modifier = floor((score - 10) / 2). Skill total = ability modifier + proficiency bonus if the circle is filled. Proficiency bonus is based on total level: 1–4 +2, 5–8 +3, 9–12 +4, 13–16 +5, 17–20 +6.</div></div>
             <div class="sheet-box sheet-wide"><h3>Combat Trackers</h3><div class="tracker-row"><div class="field"><label for="sheetHpCurrent">Current HP</label><input id="sheetHpCurrent" type="number" /></div><div class="field"><label for="sheetHpMax">Max HP</label><input id="sheetHpMax" type="number" /></div><div class="field"><label for="sheetTempHp">Temporary HP</label><input id="sheetTempHp" type="number" /></div><div class="field"><label for="sheetArmorClass">Armor Class</label><input id="sheetArmorClass" type="number" /></div><div class="field"><label for="sheetInitiative">Initiative</label><input id="sheetInitiative" /></div><div class="field"><label for="sheetSpeed">Speed</label><input id="sheetSpeed" /></div><div class="field"><label for="sheetHitDice">Hit Dice</label><input id="sheetHitDice" /></div><div class="field"><label for="sheetDeathSuccesses">Death Save Successes</label><select id="sheetDeathSuccesses"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div><div class="field"><label for="sheetDeathFailures">Death Save Failures</label><select id="sheetDeathFailures"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div></div>
             <div class="sheet-box"><h3>Saving Throws</h3><textarea id="sheetSavingThrows" placeholder="STR +3, DEX +2, CON +4..."></textarea></div>
-            <div class="sheet-box"><h3>Skills</h3><textarea id="sheetSkills" placeholder="Acrobatics, Arcana, Athletics, Perception, Stealth..."></textarea></div>
-            <div class="sheet-box"><h3>Senses & Passive Scores</h3><textarea id="sheetSenses" placeholder="Passive Perception, darkvision, insight, investigation..."></textarea></div>
+            
+            
             <div class="sheet-box sheet-wide"><h3>Attacks & Combat Actions</h3><textarea id="sheetAttacks" placeholder="Weapon / spell attack, bonus, damage, range, notes"></textarea></div>
             <div class="sheet-box"><h3>Proficiencies</h3><textarea id="sheetProficiencies" placeholder="Armor, weapons, tools, saving throws, skills"></textarea></div>
             <div class="sheet-box"><h3>Languages</h3><textarea id="sheetLanguages" placeholder="Common, Elvish, Dwarvish..."></textarea></div>
@@ -1242,9 +1292,67 @@
     updateChoiceDescriptions();
 
 
+
+    const skillDefinitions = [
+      { id: 'skillAthletics', totalId: 'skillAthleticsTotal', statId: 'sheetStrength' },
+      { id: 'skillAcrobatics', totalId: 'skillAcrobaticsTotal', statId: 'sheetDexterity' },
+      { id: 'skillSleightOfHand', totalId: 'skillSleightOfHandTotal', statId: 'sheetDexterity' },
+      { id: 'skillStealth', totalId: 'skillStealthTotal', statId: 'sheetDexterity' },
+      { id: 'skillArcana', totalId: 'skillArcanaTotal', statId: 'sheetIntelligence' },
+      { id: 'skillHistory', totalId: 'skillHistoryTotal', statId: 'sheetIntelligence' },
+      { id: 'skillInvestigation', totalId: 'skillInvestigationTotal', statId: 'sheetIntelligence' },
+      { id: 'skillNature', totalId: 'skillNatureTotal', statId: 'sheetIntelligence' },
+      { id: 'skillReligion', totalId: 'skillReligionTotal', statId: 'sheetIntelligence' },
+      { id: 'skillAnimalHandling', totalId: 'skillAnimalHandlingTotal', statId: 'sheetWisdom' },
+      { id: 'skillInsight', totalId: 'skillInsightTotal', statId: 'sheetWisdom' },
+      { id: 'skillMedicine', totalId: 'skillMedicineTotal', statId: 'sheetWisdom' },
+      { id: 'skillPerception', totalId: 'skillPerceptionTotal', statId: 'sheetWisdom' },
+      { id: 'skillSurvival', totalId: 'skillSurvivalTotal', statId: 'sheetWisdom' },
+      { id: 'skillDeception', totalId: 'skillDeceptionTotal', statId: 'sheetCharisma' },
+      { id: 'skillIntimidation', totalId: 'skillIntimidationTotal', statId: 'sheetCharisma' },
+      { id: 'skillPerformance', totalId: 'skillPerformanceTotal', statId: 'sheetCharisma' },
+      { id: 'skillPersuasion', totalId: 'skillPersuasionTotal', statId: 'sheetCharisma' }
+    ];
+    const skillProficiencyIds = skillDefinitions.map(skill => skill.id);
+
+    function updateSkillTotals() {
+      const level = getSheetValue('sheetLevel') || 1;
+      const proficiency = proficiencyBonusForLevel(level);
+      skillDefinitions.forEach(skill => {
+        const checkbox = document.getElementById(skill.id);
+        const totalBox = document.getElementById(skill.totalId);
+        if (!checkbox || !totalBox) return;
+        const base = abilityModifier(getSheetValue(skill.statId) || 10);
+        const total = base + (checkbox.checked ? proficiency : 0);
+        totalBox.textContent = signedNumber(total);
+      });
+    }
+
+    function getSkillProficiencies() {
+      const result = {};
+      skillProficiencyIds.forEach(id => {
+        result[id] = !!document.getElementById(id)?.checked;
+      });
+      return result;
+    }
+
+    function setSkillProficiencies(data = {}) {
+      const saved = data.SkillProficiencies || data.skillProficiencies || {};
+      skillProficiencyIds.forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) checkbox.checked = !!saved[id];
+      });
+      updateSkillTotals();
+    }
+
     ['sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetLevel','sheetClass'].forEach(id => {
       const element = document.getElementById(id);
       if (element) element.addEventListener('input', updateDerivedCharacterMath);
+    });
+
+    skillProficiencyIds.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) element.addEventListener('change', updateDerivedCharacterMath);
     });
 
     function clearScheduleForm() {
@@ -1500,9 +1608,10 @@
       } else {
         if (guide) guide.innerHTML = `<strong>${escapeHtml(className || 'Class resources')}:</strong> ${escapeHtml(classResourceHints[className] || 'This class may not have standard spellcasting. Use this area for class resources, magic items, special powers, or DM-approved features.')}`;
       }
+      updateSkillTotals();
     }
 
-    const sheetFieldIds = ['sheetCharacterName','sheetPlayerName','sheetRace','sheetClass','sheetSubclass','sheetLevel','sheetBackground','sheetAlignment','sheetExperience','sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetHpCurrent','sheetHpMax','sheetTempHp','sheetArmorClass','sheetInitiative','sheetSpeed','sheetHitDice','sheetDeathSuccesses','sheetDeathFailures','sheetSavingThrows','sheetSkills','sheetSenses','sheetAttacks','sheetProficiencies','sheetLanguages','sheetFeatures','sheetSpellAbility','sheetSpellSaveDc','sheetSpellAttackBonus','sheetSpellSlots','sheetSpellsKnown','sheetInventory','sheetPersonality','sheetIdeals','sheetBonds','sheetFlaws','sheetBackstory'];
+    const sheetFieldIds = ['sheetCharacterName','sheetPlayerName','sheetRace','sheetClass','sheetSubclass','sheetLevel','sheetBackground','sheetAlignment','sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetHpCurrent','sheetHpMax','sheetTempHp','sheetArmorClass','sheetInitiative','sheetSpeed','sheetHitDice','sheetDeathSuccesses','sheetDeathFailures','sheetSavingThrows','sheetAttacks','sheetProficiencies','sheetLanguages','sheetFeatures','sheetSpellAbility','sheetSpellSaveDc','sheetSpellAttackBonus','sheetSpellSlots','sheetSpellsKnown','sheetInventory','sheetPersonality','sheetIdeals','sheetBonds','sheetFlaws','sheetBackstory'];
     function updatePlayerUI(user) {
       currentUser = user || null;
       const loginArea = document.getElementById('playerLoginArea');
@@ -1524,8 +1633,8 @@
     function updateMyClassAdvice() { const className = document.getElementById('sheetClass')?.value || ''; const box = document.getElementById('classAdvice'); if (!box) return; const note = classPlayNotes[className] || classDescriptions[className] || 'Fill in class features, resources, attacks, spells, and trackers that matter for your character.'; box.innerHTML = `<strong>${escapeHtml(className || 'Class help')}:</strong> ${escapeHtml(note)}`; }
     function setSheetValue(id, value) { const el = document.getElementById(id); if (el) el.value = value ?? ''; }
     function getSheetValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
-    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); updateMyClassAdvice(); updateDerivedCharacterMath(); }
-    function collectSheetData() { updateDerivedCharacterMath(); const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.ProficiencyBonus = getSheetValue('sheetProficiencyBonus'); data.AbilityModifiers = { Strength: document.getElementById('sheetStrengthMod')?.textContent || '+0', Dexterity: document.getElementById('sheetDexterityMod')?.textContent || '+0', Constitution: document.getElementById('sheetConstitutionMod')?.textContent || '+0', Intelligence: document.getElementById('sheetIntelligenceMod')?.textContent || '+0', Wisdom: document.getElementById('sheetWisdomMod')?.textContent || '+0', Charisma: document.getElementById('sheetCharismaMod')?.textContent || '+0' }; data.ownerEmail = dmEditingUid ? dmEditingEmail : (currentUser?.email || ''); data.ownerUid = dmEditingUid || currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = dmEditingUid ? getApprovedByEmail(dmEditingEmail) : getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
+    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); setSkillProficiencies(data); updateMyClassAdvice(); updateDerivedCharacterMath(); }
+    function collectSheetData() { updateDerivedCharacterMath(); const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.SkillProficiencies = getSkillProficiencies(); data.ProficiencyBonus = getSheetValue('sheetProficiencyBonus'); data.AbilityModifiers = { Strength: document.getElementById('sheetStrengthMod')?.textContent || '+0', Dexterity: document.getElementById('sheetDexterityMod')?.textContent || '+0', Constitution: document.getElementById('sheetConstitutionMod')?.textContent || '+0', Intelligence: document.getElementById('sheetIntelligenceMod')?.textContent || '+0', Wisdom: document.getElementById('sheetWisdomMod')?.textContent || '+0', Charisma: document.getElementById('sheetCharismaMod')?.textContent || '+0' }; data.ownerEmail = dmEditingUid ? dmEditingEmail : (currentUser?.email || ''); data.ownerUid = dmEditingUid || currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = dmEditingUid ? getApprovedByEmail(dmEditingEmail) : getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
     function loadApprovedCharacterIntoSheet() { const approved = getApprovedForCurrentUser(); if (!approved) return alert('No approved character is linked to your login email yet.'); setSheetValue('sheetCharacterName', approved.characterName || ''); setSheetValue('sheetPlayerName', approved.playerName || ''); setSheetValue('sheetRace', approved.race || ''); setSheetValue('sheetClass', approved.characterClass || ''); setSheetValue('sheetBackground', approved.background || ''); const backstory = getSheetValue('sheetBackstory'); if (!backstory && approved.concept) setSheetValue('sheetBackstory', approved.concept); updateMyClassAdvice(); updateDerivedCharacterMath(); document.getElementById('myCharacterSaveStatus').textContent = 'Approved character loaded into the sheet. Click Save Character Sheet to keep it.'; }
     function getApprovedByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentApprovedEntries.find(entry => String(entry.playerEmail || '').toLowerCase() === lower) || null; }
     function getSavedSheetByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentAllCharacterSheets.find(entry => String(entry.ownerEmail || '').toLowerCase() === lower) || null; }
