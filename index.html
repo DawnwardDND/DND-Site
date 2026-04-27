@@ -1,4 +1,4 @@
-ma<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -626,6 +626,22 @@ ma<!DOCTYPE html>
       font-size: 0.95rem;
     }
 
+    .choice-help {
+      margin-top: -0.35rem;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      border: 1px solid rgba(244,216,138,0.22);
+      background: rgba(0,0,0,0.28);
+      color: #d8cba9;
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .choice-help strong {
+      color: var(--bright-gold);
+    }
+
+
     .dm-panel {
       margin-top: 1.5rem;
       padding: 1rem;
@@ -855,9 +871,12 @@ ma<!DOCTYPE html>
             <input id="requestPlayerName" placeholder="Your real name" />
             <input id="requestCharacterName" placeholder="Character name" />
             <select id="requestRace"><option value="">Choose Race / Species</option><option>Human</option><option>Elf</option><option>Half-Elf</option><option>Dwarf</option><option>Halfling</option><option>Gnome</option><option>Half-Orc</option><option>Tiefling</option><option>Dragonborn</option><option>Aasimar</option><option>Genasi</option><option>Goliath</option><option>Firbolg</option><option>Tabaxi</option><option>Triton</option><option>Goblin</option><option>Kenku</option><option>Lizardfolk</option><option>Other / Ask DM</option></select>
+            <div id="raceDescription" class="choice-help"><strong>Race / Species:</strong> Choose one to see a quick roleplay description.</div>
             <select id="requestSex"><option value="">Choose Sex / Gender</option><option>Female</option><option>Male</option><option>Nonbinary</option><option>Other / Unspecified</option></select>
             <select id="requestClass"><option value="">Choose Class</option><option>Barbarian</option><option>Bard</option><option>Cleric</option><option>Druid</option><option>Fighter</option><option>Monk</option><option>Paladin</option><option>Ranger</option><option>Rogue</option><option>Sorcerer</option><option>Warlock</option><option>Wizard</option><option>Artificer</option><option>Blood Hunter / Ask DM</option></select>
+            <div id="classDescription" class="choice-help"><strong>Class:</strong> Choose one to see what kind of hero they are.</div>
             <select id="requestBackground"><option value="">Choose Background</option><option>Acolyte</option><option>Charlatan</option><option>Criminal</option><option>Entertainer</option><option>Folk Hero</option><option>Guild Artisan</option><option>Hermit</option><option>Noble</option><option>Outlander</option><option>Sage</option><option>Sailor</option><option>Soldier</option><option>Urchin</option><option>Haunted One</option><option>Far Traveler</option><option>Knight</option><option>Pirate</option><option>Custom / Ask DM</option></select>
+            <div id="backgroundDescription" class="choice-help"><strong>Background:</strong> Choose one to see where this character came from before adventuring.</div>
             <textarea id="requestConcept" placeholder="Character concept, backstory idea, oath, secret, reason they joined the fellowship, or subclass request"></textarea>
             <p class="form-hint">Requests remain pending until Mason approves them.</p>
             <button class="epic-button" onclick="submitCharacterRequest()">Submit Character Request</button>
@@ -1023,6 +1042,88 @@ ma<!DOCTYPE html>
         .replaceAll("'", '&#039;');
     }
 
+
+
+    const raceDescriptions = {
+      "Human": "Adaptable, ambitious, and found in nearly every corner of the world. A strong pick for players who want flexibility and a grounded place in the setting.",
+      "Elf": "Graceful, long-lived, and tied to old magic, memory, and ancient places. Elves often carry the weight of history more personally than others.",
+      "Half-Elf": "Caught between worlds, half-elves often move easily through different cultures but may never fully belong to one. Great for diplomats, wanderers, and complicated heirs.",
+      "Dwarf": "Hardy, stubborn, and shaped by stone, craft, clan, and oath. Dwarves often value loyalty, tradition, and grudges that last generations.",
+      "Halfling": "Small, brave, and often underestimated. Halflings make excellent unlikely heroes, clever survivors, and warm-hearted troublemakers.",
+      "Gnome": "Curious, inventive, and touched by whimsy or strange genius. Gnomes are perfect for players who like clever solutions and odd ideas.",
+      "Half-Orc": "Powerful and intense, often judged before they speak. Half-orcs make compelling warriors, outcasts, protectors, or people trying to define themselves beyond fear.",
+      "Tiefling": "Marked by infernal blood or old curses, tieflings often face suspicion. Great for characters wrestling with reputation, destiny, or forbidden power.",
+      "Dragonborn": "Proud, imposing, and shaped by draconic ancestry. Dragonborn often care deeply about honor, legacy, and proving themselves.",
+      "Aasimar": "Touched by celestial power, aasimar carry a light that may feel like blessing, burden, or prophecy. Ideal for characters with divine pressure on their shoulders.",
+      "Genasi": "Born with elemental influence, genasi carry fire, water, earth, or air in their nature. A good fit for mysterious origins or supernatural bloodlines.",
+      "Goliath": "Large, resilient mountain-folk who value endurance, challenge, and deeds over words. Great for stoic protectors or competitive adventurers.",
+      "Firbolg": "Gentle, hidden forest-kin connected to nature and quiet magic. Firbolgs often prefer peace, but become terrifying when their home is threatened.",
+      "Tabaxi": "Catlike wanderers driven by curiosity, stories, and rare treasures. Great for scouts, rogues, bards, and impulsive explorers.",
+      "Triton": "Sea-born guardians from deep places, often unfamiliar with surface customs. Great for noble outsiders, ocean warriors, and ancient duty.",
+      "Goblin": "Small, quick, scrappy, and clever survivors. Goblins are great for chaotic underdogs, comic relief with depth, or sharp-eyed opportunists.",
+      "Kenku": "Ravenlike folk known for mimicry and mystery. Great for eerie scouts, strange rogues, and characters who communicate in unusual ways.",
+      "Lizardfolk": "Practical, primal, and emotionally alien to many townsfolk. Lizardfolk are great for survival-focused characters with a very different worldview.",
+      "Other / Ask DM": "Choose this if you have a special ancestry in mind. Mason may approve it, adjust it, or tie it directly into the campaign world."
+    };
+
+    const classDescriptions = {
+      "Barbarian": "A fierce warrior powered by rage, instinct, and raw strength. Great if you want to charge into danger and survive what should kill you.",
+      "Bard": "A magical performer, storyteller, trickster, or diplomat. Great if you want charm, support magic, and lots of roleplay flexibility.",
+      "Cleric": "A divine spellcaster devoted to a god, ideal, or sacred force. Great for healing, protection, and calling down holy power.",
+      "Druid": "A nature-bound spellcaster who can command the wild and transform into beasts. Great for primal magic, survival, and ancient mysteries.",
+      "Fighter": "A trained combat expert with unmatched weapon skill. Great if you want reliability, tactics, and a hero who can stand on the front line.",
+      "Monk": "A disciplined martial artist using speed, focus, and inner power. Great for mobile fighters, mystics, and calm-but-deadly characters.",
+      "Paladin": "A holy warrior bound by an oath. Great if you want armor, divine power, strong ideals, and big dramatic choices.",
+      "Ranger": "A hunter, tracker, and wilderness expert. Great for scouts, monster hunters, archers, and characters tied to dangerous lands.",
+      "Rogue": "A stealthy expert in tricks, precision, and skills. Great for spies, thieves, assassins, investigators, and silver-tongued survivors.",
+      "Sorcerer": "A spellcaster whose magic comes from bloodline, accident, curse, or destiny. Great for raw power and mysterious origins.",
+      "Warlock": "A magic user bound to a powerful patron. Great if you want bargains, secrets, forbidden gifts, and dangerous relationships.",
+      "Wizard": "A scholar of arcane magic who learns spells through study. Great for strategy, lore, rituals, and becoming terrifying with preparation.",
+      "Artificer": "A magical inventor who blends craft, tools, and arcane engineering. Great for tinkerers, alchemists, and enchanted gear makers.",
+      "Blood Hunter / Ask DM": "A dark monster-hunter who uses blood magic and sacrifice. This is not standard core 5e, so ask Mason before choosing it."
+    };
+
+    const backgroundDescriptions = {
+      "Acolyte": "You served a temple, faith, or sacred order. Good for characters with religious knowledge, divine ties, or spiritual conflict.",
+      "Charlatan": "You lived by deception, disguises, and false promises. Good for con artists, fake nobles, and silver-tongued survivors.",
+      "Criminal": "You know the underworld, its codes, and its dangers. Good for thieves, smugglers, enforcers, or someone trying to escape a past life.",
+      "Entertainer": "You made a living through performance. Good for bards, actors, circus folk, storytellers, and beloved troublemakers.",
+      "Folk Hero": "Common people already know your name for one brave deed. Good for humble heroes, rebels, and protectors of small towns.",
+      "Guild Artisan": "You trained in a craft or trade. Good for smiths, brewers, masons, jewelers, and practical characters with useful contacts.",
+      "Hermit": "You lived apart from society and discovered something strange. Good for prophets, exiles, mystics, and people with unsettling secrets.",
+      "Noble": "You come from wealth, title, or a powerful family. Good for heirs, disgraced lords, political pawns, and proud diplomats.",
+      "Outlander": "You survived beyond civilization. Good for hunters, nomads, scouts, and characters more comfortable under stars than roofs.",
+      "Sage": "You studied history, magic, or forgotten knowledge. Good for scholars, librarians, researchers, and lore-hungry wizards.",
+      "Sailor": "You worked aboard ships and know the sea. Good for travelers, pirates-with-a-past, navigators, and storm-tested adventurers.",
+      "Soldier": "You served in war or military ranks. Good for disciplined fighters, veterans, deserters, and characters haunted by old battles.",
+      "Urchin": "You grew up poor, overlooked, and street-smart. Good for rogues, survivors, and characters who know cities from the gutter up.",
+      "Haunted One": "Something terrible marked your past. Good for horror-leaning characters, survivors of darkness, and people followed by old nightmares.",
+      "Far Traveler": "You come from distant lands and unfamiliar customs. Good for outsiders, ambassadors, exiles, and characters bringing foreign stories.",
+      "Knight": "You were trained in service, honor, and noble duty. Good for sworn protectors, fallen champions, and warriors with codes.",
+      "Pirate": "You lived by sail, plunder, and danger. Good for bold rogues, sea-dogs, mutineers, and characters with enemies across the waves.",
+      "Custom / Ask DM": "Choose this if you have a specific backstory that does not fit the list. Mason can help shape it into the campaign."
+    };
+
+    function updateChoiceDescriptions() {
+      const race = document.getElementById('requestRace')?.value || '';
+      const characterClass = document.getElementById('requestClass')?.value || '';
+      const background = document.getElementById('requestBackground')?.value || '';
+      const raceBox = document.getElementById('raceDescription');
+      const classBox = document.getElementById('classDescription');
+      const backgroundBox = document.getElementById('backgroundDescription');
+
+      if (raceBox) raceBox.innerHTML = race ? `<strong>${escapeHtml(race)}:</strong> ${escapeHtml(raceDescriptions[race] || 'Ask the DM for details about this ancestry.')}` : '<strong>Race / Species:</strong> Choose one to see a quick roleplay description.';
+      if (classBox) classBox.innerHTML = characterClass ? `<strong>${escapeHtml(characterClass)}:</strong> ${escapeHtml(classDescriptions[characterClass] || 'Ask the DM for details about this class.')}` : '<strong>Class:</strong> Choose one to see what kind of hero they are.';
+      if (backgroundBox) backgroundBox.innerHTML = background ? `<strong>${escapeHtml(background)}:</strong> ${escapeHtml(backgroundDescriptions[background] || 'Ask the DM for details about this background.')}` : '<strong>Background:</strong> Choose one to see where this character came from before adventuring.';
+    }
+
+    ['requestRace', 'requestClass', 'requestBackground'].forEach(id => {
+      const element = document.getElementById(id);
+      if (element) element.addEventListener('change', updateChoiceDescriptions);
+    });
+
+    updateChoiceDescriptions();
+
     function clearScheduleForm() {
       document.getElementById('playerName').value = '';
       document.getElementById('dateInput').value = '';
@@ -1037,6 +1138,7 @@ ma<!DOCTYPE html>
       document.getElementById('requestClass').value = '';
       document.getElementById('requestBackground').value = '';
       document.getElementById('requestConcept').value = '';
+      updateChoiceDescriptions();
     }
 
     function getScheduleFormData() {
