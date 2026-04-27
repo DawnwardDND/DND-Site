@@ -683,6 +683,24 @@
     @media (max-width: 760px) { .dm-login-row { grid-template-columns: 1fr; } }
 
 
+    .sheet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.85rem; margin-top: 1rem; }
+    .sheet-wide { grid-column: 1 / -1; }
+    .sheet-box { padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.28); }
+    .sheet-box h3 { color: var(--gold); margin-bottom: 0.7rem; font-size: 1.08rem; }
+    .mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.65rem; }
+    .ability-card { text-align: center; padding: 0.8rem; border-radius: 16px; border: 1px solid rgba(244,216,138,0.25); background: rgba(6,8,10,0.54); }
+    .ability-card label { display: block; color: var(--bright-gold); font-weight: bold; margin-bottom: 0.4rem; letter-spacing: 0.04em; }
+    .ability-card input { text-align: center; font-size: 1.15rem; font-weight: bold; }
+    .tracker-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.7rem; align-items: end; }
+    .login-panel { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.32); }
+    .login-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.7rem; align-items: center; margin-top: 0.8rem; }
+    .save-status { margin-top: 0.8rem; color: #d8cba9; line-height: 1.5; }
+    .linked-character-banner { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(217,244,138,0.35); background: rgba(34,48,12,0.28); color: #efe6c9; line-height: 1.55; }
+    .class-advice { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.28); color: #efe6c9; line-height: 1.6; }
+    .class-advice strong { color: var(--bright-gold); }
+    @media (max-width: 760px) { .login-row { grid-template-columns: 1fr; } }
+
+
     footer {
       position: relative;
       z-index: 4;
@@ -759,6 +777,7 @@
     <button class="active" data-tab="home">Home</button>
     <button data-tab="map">Map</button>
     <button data-tab="characters">Characters</button>
+    <button data-tab="mycharacter">My Character</button>
     <button data-tab="lore">Lore</button>
     <button data-tab="quests">Quests</button>
     <button data-tab="schedule">Schedule</button>
@@ -869,6 +888,7 @@
           <p class="lead">Submit the character you want to play. These are requests, not automatic approvals. The DM may limit races, classes, subclasses, or backgrounds to fit the campaign.</p>
           <div class="form-area">
             <input id="requestPlayerName" placeholder="Your real name" />
+            <input id="requestPlayerEmail" type="email" placeholder="Your Firebase login email for My Character tab" />
             <input id="requestCharacterName" placeholder="Character name" />
             <select id="requestRace"><option value="">Choose Race / Species</option><option>Human</option><option>Elf</option><option>Half-Elf</option><option>Dwarf</option><option>Halfling</option><option>Gnome</option><option>Half-Orc</option><option>Tiefling</option><option>Dragonborn</option><option>Aasimar</option><option>Genasi</option><option>Goliath</option><option>Firbolg</option><option>Tabaxi</option><option>Triton</option><option>Goblin</option><option>Kenku</option><option>Lizardfolk</option><option>Other / Ask DM</option></select>
             <div id="raceDescription" class="choice-help"><strong>Race / Species:</strong> Choose one to see a quick roleplay description.</div>
@@ -886,6 +906,47 @@
         </div>
       </div>
     </section>
+
+    <section id="mycharacter">
+      <div class="panel">
+        <h2>My Character</h2>
+        <p class="lead">Log in with your player account to create, view, and update your private character sheet. If Mason approved a character request using this same email, the sheet will automatically link to it.</p>
+        <div class="login-panel">
+          <span class="tag">Player Login</span>
+          <div id="playerLoginArea" class="login-row">
+            <input id="playerEmail" type="email" placeholder="Player email" />
+            <input id="playerPassword" type="password" placeholder="Password" />
+            <button class="epic-button" onclick="playerLogin()">Log In</button>
+          </div>
+          <div id="playerLoggedInArea" class="button-row hidden"><button class="epic-button danger-button" onclick="playerLogout()">Log Out</button></div>
+          <p id="playerStatus" class="save-status">Not logged in. Ask Mason for your player email and password.</p>
+        </div>
+        <div id="myCharacterLocked" class="small-warning">Log in to access your private sheet. Each player can only read and save their own sheet.</div>
+        <div id="myCharacterSheet" class="hidden">
+          <div id="linkedCharacterBanner" class="linked-character-banner">No approved character has been linked yet. You can still draft and save your sheet.</div>
+          <div id="classAdvice" class="class-advice"><strong>Class help:</strong> Select or link a class to see reminders for your character.</div>
+          <div class="button-row"><button class="epic-button" onclick="loadApprovedCharacterIntoSheet()">Use My Approved Character</button><button class="epic-button" onclick="saveMyCharacterSheet()">Save Character Sheet</button></div>
+          <div class="sheet-grid">
+            <div class="sheet-box sheet-wide"><h3>Identity</h3><div class="mini-grid"><input id="sheetCharacterName" placeholder="Character name" /><input id="sheetPlayerName" placeholder="Player name" /><input id="sheetRace" placeholder="Race / Species" /><input id="sheetClass" placeholder="Class" oninput="updateMyClassAdvice()" /><input id="sheetSubclass" placeholder="Subclass / Archetype" /><input id="sheetLevel" type="number" min="1" placeholder="Level" /><input id="sheetBackground" placeholder="Background" /><input id="sheetAlignment" placeholder="Alignment" /><input id="sheetExperience" placeholder="Experience points" /></div></div>
+            <div class="sheet-box sheet-wide"><h3>Core Stats</h3><div class="mini-grid"><div class="ability-card"><label>STR</label><input id="sheetStrength" type="number" placeholder="10" /></div><div class="ability-card"><label>DEX</label><input id="sheetDexterity" type="number" placeholder="10" /></div><div class="ability-card"><label>CON</label><input id="sheetConstitution" type="number" placeholder="10" /></div><div class="ability-card"><label>INT</label><input id="sheetIntelligence" type="number" placeholder="10" /></div><div class="ability-card"><label>WIS</label><input id="sheetWisdom" type="number" placeholder="10" /></div><div class="ability-card"><label>CHA</label><input id="sheetCharisma" type="number" placeholder="10" /></div></div></div>
+            <div class="sheet-box sheet-wide"><h3>Combat Trackers</h3><div class="tracker-row"><input id="sheetHpCurrent" type="number" placeholder="Current HP" /><input id="sheetHpMax" type="number" placeholder="Max HP" /><input id="sheetTempHp" type="number" placeholder="Temporary HP" /><input id="sheetArmorClass" type="number" placeholder="Armor Class" /><input id="sheetInitiative" placeholder="Initiative" /><input id="sheetSpeed" placeholder="Speed" /><input id="sheetHitDice" placeholder="Hit Dice" /><select id="sheetDeathSuccesses"><option value="0">Death Saves Successes: 0</option><option value="1">Successes: 1</option><option value="2">Successes: 2</option><option value="3">Successes: 3</option></select><select id="sheetDeathFailures"><option value="0">Death Saves Failures: 0</option><option value="1">Failures: 1</option><option value="2">Failures: 2</option><option value="3">Failures: 3</option></select></div></div>
+            <div class="sheet-box"><h3>Saving Throws</h3><textarea id="sheetSavingThrows" placeholder="STR +3, DEX +2, CON +4..."></textarea></div>
+            <div class="sheet-box"><h3>Skills</h3><textarea id="sheetSkills" placeholder="Acrobatics, Arcana, Athletics, Perception, Stealth..."></textarea></div>
+            <div class="sheet-box"><h3>Senses & Passive Scores</h3><textarea id="sheetSenses" placeholder="Passive Perception, darkvision, insight, investigation..."></textarea></div>
+            <div class="sheet-box sheet-wide"><h3>Attacks & Combat Actions</h3><textarea id="sheetAttacks" placeholder="Weapon / spell attack, bonus, damage, range, notes"></textarea></div>
+            <div class="sheet-box"><h3>Proficiencies</h3><textarea id="sheetProficiencies" placeholder="Armor, weapons, tools, saving throws, skills"></textarea></div>
+            <div class="sheet-box"><h3>Languages</h3><textarea id="sheetLanguages" placeholder="Common, Elvish, Dwarvish..."></textarea></div>
+            <div class="sheet-box sheet-wide"><h3>Features & Traits</h3><textarea id="sheetFeatures" placeholder="Race traits, class features, background feature, feats"></textarea></div>
+            <div class="sheet-box sheet-wide"><h3>Spellcasting & Class Resources</h3><div class="mini-grid"><input id="sheetSpellAbility" placeholder="Spellcasting ability" /><input id="sheetSpellSaveDc" placeholder="Spell save DC" /><input id="sheetSpellAttackBonus" placeholder="Spell attack bonus" /></div><textarea id="sheetSpellSlots" placeholder="Spell slots / pact slots / ki / sorcery points / channel divinity trackers"></textarea><textarea id="sheetSpellsKnown" placeholder="Cantrips, prepared spells, known spells, rituals"></textarea></div>
+            <div class="sheet-box sheet-wide"><h3>Equipment, Treasure & Inventory</h3><textarea id="sheetInventory" placeholder="Weapons, armor, adventuring gear, magic items, coin"></textarea></div>
+            <div class="sheet-box"><h3>Personality</h3><textarea id="sheetPersonality" placeholder="Personality traits"></textarea></div><div class="sheet-box"><h3>Ideals</h3><textarea id="sheetIdeals" placeholder="Ideals"></textarea></div><div class="sheet-box"><h3>Bonds</h3><textarea id="sheetBonds" placeholder="Bonds"></textarea></div><div class="sheet-box"><h3>Flaws</h3><textarea id="sheetFlaws" placeholder="Flaws"></textarea></div>
+            <div class="sheet-box sheet-wide"><h3>Backstory & Campaign Notes</h3><textarea id="sheetBackstory" placeholder="Backstory, goals, secrets, NPC connections, session notes"></textarea></div>
+          </div>
+          <div class="button-row"><button class="epic-button" onclick="saveMyCharacterSheet()">Save Character Sheet</button></div><p id="myCharacterSaveStatus" class="save-status">Unsaved changes will stay only on this page until you click save.</p>
+        </div>
+      </div>
+    </section>
+
 
     <section id="lore">
       <div class="panel">
@@ -1032,6 +1093,9 @@
     let currentScheduleEntries = [];
     let currentRequestEntries = [];
     let currentApprovedEntries = [];
+    let currentUser = null;
+    let myCharacterUnsubscribe = null;
+    let currentMyCharacterData = null;
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -1132,6 +1196,7 @@
 
     function clearCharacterRequestForm() {
       document.getElementById('requestPlayerName').value = '';
+      document.getElementById('requestPlayerEmail').value = '';
       document.getElementById('requestCharacterName').value = '';
       document.getElementById('requestRace').value = '';
       document.getElementById('requestSex').value = '';
@@ -1157,6 +1222,7 @@
 
     function getCharacterRequestFormData() {
       const playerName = document.getElementById('requestPlayerName').value.trim();
+      const playerEmail = document.getElementById('requestPlayerEmail').value.trim().toLowerCase();
       const characterName = document.getElementById('requestCharacterName').value.trim();
       const race = document.getElementById('requestRace').value;
       const sex = document.getElementById('requestSex').value;
@@ -1164,12 +1230,12 @@
       const background = document.getElementById('requestBackground').value;
       const concept = document.getElementById('requestConcept').value.trim();
 
-      if (!playerName || !characterName || !race || !sex || !characterClass || !background) {
-        alert('Please complete player name, character name, race, sex/gender, class, and background.');
+      if (!playerName || !playerEmail || !characterName || !race || !sex || !characterClass || !background) {
+        alert('Please complete player name, player login email, character name, race, sex/gender, class, and background.');
         return null;
       }
 
-      return { playerName, characterName, race, sex, characterClass, background, concept };
+      return { playerName, playerEmail, characterName, race, sex, characterClass, background, concept };
     }
 
     function updateDMUI(user) {
@@ -1227,6 +1293,7 @@
           <span class="tag">Player Character</span>
           <h3>${escapeHtml(entry.characterName)}</h3>
           <p><strong>Player:</strong> ${escapeHtml(entry.playerName)}</p>
+          <p><strong>Login Email:</strong> ${escapeHtml(entry.playerEmail || 'Not linked')}</p>
           <p>
             <span class="tag">${escapeHtml(entry.race)}</span>
             <span class="tag">${escapeHtml(entry.sex)}</span>
@@ -1261,6 +1328,7 @@
             <span class="tag">${escapeHtml(entry.background)}</span>
           </p>
           <p><strong>Player:</strong> ${escapeHtml(entry.playerName)}</p>
+          <p><strong>Login Email:</strong> ${escapeHtml(entry.playerEmail || 'Not linked')}</p>
           <p>${escapeHtml(entry.concept || 'No concept added.')}</p>
           ${dmActions}
         `;
@@ -1268,9 +1336,47 @@
       });
     }
 
+
+    const classPlayNotes = {
+      "Barbarian": "Track Rage uses, danger sense, reckless attack, and primal path features. Spell section can be used for magic items or subclass powers.",
+      "Bard": "Track Bardic Inspiration, spell save DC, known spells, expertise, jack of all trades, and college features.",
+      "Cleric": "Track prepared spells, Channel Divinity, domain features, spell slots, and healing/support options.",
+      "Druid": "Track Wild Shape uses, prepared spells, circle features, concentration spells, and beast forms.",
+      "Fighter": "Track Second Wind, Action Surge, fighting style, superiority dice or archetype features, and weapon attacks.",
+      "Monk": "Track Ki points, martial arts die, unarmored movement, deflect missiles, and monastic tradition features.",
+      "Paladin": "Track Lay on Hands, Divine Sense, Divine Smite, prepared spells, oath features, and auras.",
+      "Ranger": "Track favored enemy/foe, natural explorer/deft explorer, spells, conclave features, and exploration tools.",
+      "Rogue": "Track Sneak Attack dice, expertise, cunning action, thieves' tools, and roguish archetype features.",
+      "Sorcerer": "Track sorcery points, metamagic, spell slots, known spells, and origin features.",
+      "Warlock": "Track pact slots, invocations, patron features, pact boon, and short-rest resources.",
+      "Wizard": "Track spellbook, prepared spells, rituals, arcane recovery, school features, and copied spells.",
+      "Artificer": "Track infusions, tools, prepared spells, magical tinkering, subclass features, and crafted items.",
+      "Blood Hunter / Ask DM": "Track hemocraft die, blood curses, crimson rite, order features, and self-damage carefully. Confirm rules with Mason."
+    };
+    const sheetFieldIds = ['sheetCharacterName','sheetPlayerName','sheetRace','sheetClass','sheetSubclass','sheetLevel','sheetBackground','sheetAlignment','sheetExperience','sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetHpCurrent','sheetHpMax','sheetTempHp','sheetArmorClass','sheetInitiative','sheetSpeed','sheetHitDice','sheetDeathSuccesses','sheetDeathFailures','sheetSavingThrows','sheetSkills','sheetSenses','sheetAttacks','sheetProficiencies','sheetLanguages','sheetFeatures','sheetSpellAbility','sheetSpellSaveDc','sheetSpellAttackBonus','sheetSpellSlots','sheetSpellsKnown','sheetInventory','sheetPersonality','sheetIdeals','sheetBonds','sheetFlaws','sheetBackstory'];
+    function updatePlayerUI(user) {
+      currentUser = user || null;
+      const loginArea = document.getElementById('playerLoginArea');
+      const loggedInArea = document.getElementById('playerLoggedInArea');
+      const status = document.getElementById('playerStatus');
+      const locked = document.getElementById('myCharacterLocked');
+      const sheet = document.getElementById('myCharacterSheet');
+      if (!loginArea || !loggedInArea || !status || !locked || !sheet) return;
+      if (user) { loginArea.classList.add('hidden'); loggedInArea.classList.remove('hidden'); locked.classList.add('hidden'); sheet.classList.remove('hidden'); status.textContent = `Logged in as ${user.email}. This sheet saves only to your account.`; }
+      else { loginArea.classList.remove('hidden'); loggedInArea.classList.add('hidden'); locked.classList.remove('hidden'); sheet.classList.add('hidden'); status.textContent = 'Not logged in. Ask Mason for your player email and password.'; }
+    }
+    function getApprovedForCurrentUser() { if (!currentUser?.email) return null; const email = currentUser.email.toLowerCase(); return currentApprovedEntries.find(entry => String(entry.playerEmail || '').toLowerCase() === email) || null; }
+    function updateLinkedCharacterBanner() { const banner = document.getElementById('linkedCharacterBanner'); if (!banner) return; const approved = getApprovedForCurrentUser(); if (approved) banner.innerHTML = `<strong>Linked approved character:</strong> ${escapeHtml(approved.characterName)} — ${escapeHtml(approved.race)} ${escapeHtml(approved.characterClass)}. Use the button above to pull this approved identity into your sheet.`; else if (currentUser) banner.innerHTML = `No approved character is linked to <strong>${escapeHtml(currentUser.email)}</strong> yet. Submit a request using that exact email, or ask Mason to approve/link your character.`; else banner.textContent = 'Log in to link an approved character.'; }
+    function updateMyClassAdvice() { const className = document.getElementById('sheetClass')?.value || ''; const box = document.getElementById('classAdvice'); if (!box) return; const note = classPlayNotes[className] || classDescriptions[className] || 'Fill in class features, resources, attacks, spells, and trackers that matter for your character.'; box.innerHTML = `<strong>${escapeHtml(className || 'Class help')}:</strong> ${escapeHtml(note)}`; }
+    function setSheetValue(id, value) { const el = document.getElementById(id); if (el) el.value = value ?? ''; }
+    function getSheetValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); updateMyClassAdvice(); }
+    function collectSheetData() { const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.ownerEmail = currentUser?.email || ''; data.ownerUid = currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
+    function loadApprovedCharacterIntoSheet() { const approved = getApprovedForCurrentUser(); if (!approved) return alert('No approved character is linked to your login email yet.'); setSheetValue('sheetCharacterName', approved.characterName || ''); setSheetValue('sheetPlayerName', approved.playerName || ''); setSheetValue('sheetRace', approved.race || ''); setSheetValue('sheetClass', approved.characterClass || ''); setSheetValue('sheetBackground', approved.background || ''); const backstory = getSheetValue('sheetBackstory'); if (!backstory && approved.concept) setSheetValue('sheetBackstory', approved.concept); updateMyClassAdvice(); document.getElementById('myCharacterSaveStatus').textContent = 'Approved character loaded into the sheet. Click Save Character Sheet to keep it.'; }
+
     async function startFirebaseStorage() {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
-      const { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      const { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, serverTimestamp, query, orderBy } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
       const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
 
       const app = initializeApp(firebaseConfig);
@@ -1282,10 +1388,22 @@
 
       onAuthStateChanged(auth, user => {
         isDM = !!user && user.uid === DM_UID;
+        currentUser = user || null;
         updateDMUI(user);
+        updatePlayerUI(user);
+        updateLinkedCharacterBanner();
         renderSchedule(currentScheduleEntries, "removeFirebaseSchedule");
         renderCharacterRequests(currentRequestEntries, "removeFirebaseCharacterRequest", "approveFirebaseCharacterRequest");
         renderApprovedCharacters(currentApprovedEntries, "removeFirebaseApprovedCharacter");
+        if (myCharacterUnsubscribe) { myCharacterUnsubscribe(); myCharacterUnsubscribe = null; }
+        if (user) {
+          const mySheetDoc = doc(db, "users", user.uid, "character", "main");
+          myCharacterUnsubscribe = onSnapshot(mySheetDoc, snapshot => {
+            currentMyCharacterData = snapshot.exists() ? snapshot.data() : null;
+            if (currentMyCharacterData) { fillSheet(currentMyCharacterData); document.getElementById('myCharacterSaveStatus').textContent = 'Character sheet loaded from Firebase.'; }
+            else { fillSheet({}); const approved = getApprovedForCurrentUser(); if (approved) loadApprovedCharacterIntoSheet(); document.getElementById('myCharacterSaveStatus').textContent = 'No saved sheet yet. Fill this out and click Save Character Sheet.'; }
+          }, error => { console.error(error); document.getElementById('myCharacterSaveStatus').textContent = 'Could not load your sheet. Check Firestore rules for users/{uid}/character/main.'; });
+        } else { fillSheet({}); }
       });
 
       onSnapshot(query(scheduleRef, orderBy("createdAt", "desc")), snapshot => {
@@ -1301,6 +1419,7 @@
       onSnapshot(query(approvedCharactersRef, orderBy("approvedAt", "desc")), snapshot => {
         const entries = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
         renderApprovedCharacters(entries, "removeFirebaseApprovedCharacter");
+        updateLinkedCharacterBanner();
       });
 
       window.dmLogin = async function () {
@@ -1317,6 +1436,13 @@
       };
 
       window.dmLogout = async function () { await signOut(auth); };
+
+      window.playerLogin = async function () { const email = document.getElementById('playerEmail').value.trim(); const password = document.getElementById('playerPassword').value; if (!email || !password) return alert('Please enter your player email and password.'); try { await signInWithEmailAndPassword(auth, email, password); document.getElementById('playerPassword').value = ''; } catch (error) { alert('Login failed. Check your email/password or ask Mason to create your Firebase Authentication account.'); console.error(error); } };
+      window.playerLogout = async function () { await signOut(auth); };
+      window.saveMyCharacterSheet = async function () { if (!currentUser) return alert('Log in before saving your character sheet.'); const data = collectSheetData(); await setDoc(doc(db, "users", currentUser.uid, "character", "main"), { ...data, updatedAt: serverTimestamp() }, { merge: true }); document.getElementById('myCharacterSaveStatus').textContent = 'Character sheet saved.'; };
+      window.loadApprovedCharacterIntoSheet = loadApprovedCharacterIntoSheet;
+      window.updateMyClassAdvice = updateMyClassAdvice;
+
 
       window.addSchedule = async function () {
         const data = getScheduleFormData();
@@ -1363,6 +1489,7 @@
       let savedApprovedCharacters = JSON.parse(localStorage.getItem('approvedCharacters') || '[]');
       isDM = true;
       updateDMUI({ email: 'local fallback DM' });
+      updatePlayerUI(null);
 
       function saveLocalSchedule() { localStorage.setItem('dndSchedule', JSON.stringify(savedSchedule)); }
       function saveLocalCharacterRequests() { localStorage.setItem('characterRequests', JSON.stringify(savedCharacterRequests)); }
@@ -1373,6 +1500,11 @@
 
       window.dmLogin = function () { alert('Firebase is not connected, so local fallback mode is active.'); };
       window.dmLogout = function () { alert('Firebase is not connected, so local fallback mode is active.'); };
+      window.playerLogin = function () { currentUser = { email: 'local-player@example.com', uid: 'local-player' }; updatePlayerUI(currentUser); updateLinkedCharacterBanner(); };
+      window.playerLogout = function () { currentUser = null; updatePlayerUI(null); };
+      window.saveMyCharacterSheet = function () { localStorage.setItem('myCharacterSheet', JSON.stringify(collectSheetData())); document.getElementById('myCharacterSaveStatus').textContent = 'Character sheet saved locally.'; };
+      window.loadApprovedCharacterIntoSheet = loadApprovedCharacterIntoSheet;
+      window.updateMyClassAdvice = updateMyClassAdvice;
 
       window.addSchedule = function () {
         const data = getScheduleFormData();
