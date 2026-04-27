@@ -1087,6 +1087,13 @@
         query,
         orderBy
       } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    
+      const {
+      getAuth,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
