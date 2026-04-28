@@ -712,6 +712,21 @@
     .linked-character-banner { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(217,244,138,0.35); background: rgba(34,48,12,0.28); color: #efe6c9; line-height: 1.55; }
     .class-advice { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.25); background: rgba(0,0,0,0.28); color: #efe6c9; line-height: 1.6; }
     .class-advice strong { color: var(--bright-gold); }
+
+    .spell-picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .spell-list-panel { padding: 1rem; border-radius: 18px; border: 1px solid rgba(244,216,138,0.24); background: rgba(0,0,0,0.24); min-height: 260px; }
+    .spell-list-panel h4 { color: var(--gold); margin-bottom: 0.7rem; font-size: 1rem; letter-spacing: 0.04em; }
+    .spell-list { display: grid; gap: 0.55rem; max-height: 430px; overflow-y: auto; padding-right: 0.35rem; }
+    .spell-card { padding: 0.8rem; border-radius: 14px; border: 1px solid rgba(244,216,138,0.2); background: rgba(6,8,10,0.52); display: grid; gap: 0.35rem; }
+    .spell-card strong { color: var(--bright-gold); }
+    .spell-card p { color: #efe6c9; line-height: 1.45; font-size: 0.92rem; }
+    .spell-meta { color: #d8cba9; font-size: 0.82rem; }
+    .spell-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.3rem; }
+    .tiny-button { border: 1px solid rgba(244,216,138,0.36); border-radius: 999px; padding: 0.4rem 0.65rem; cursor: pointer; font-family: inherit; color: #160e07; background: linear-gradient(180deg, var(--bright-gold), var(--bronze)); font-weight: bold; }
+    .tiny-button.secondary { color: var(--parchment); background: rgba(0,0,0,0.35); }
+    .spell-picker-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.65rem; margin-top: 1rem; }
+    .spell-empty { color: #d8cba9; line-height: 1.5; }
+    @media (max-width: 860px) { .spell-picker-grid { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { .login-row { grid-template-columns: 1fr; } }
 
 
@@ -934,7 +949,7 @@
           <p class="lead">Submit the character you want to play. These are requests, not automatic approvals. The DM may limit races, classes, subclasses, or backgrounds to fit the campaign.</p>
           <div class="form-area">
             <input id="requestPlayerName" placeholder="Your real name" />
-            <input id="requestPlayerEmail" type="email" placeholder="Email" />
+            <input id="requestPlayerEmail" type="email" placeholder="Your Firebase login email for My Character tab" />
             <input id="requestCharacterName" placeholder="Character name" />
             <select id="requestRace"><option value="">Choose Race / Species</option><option>Human</option><option>Elf</option><option>Half-Elf</option><option>Dwarf</option><option>Halfling</option><option>Gnome</option><option>Half-Orc</option><option>Tiefling</option><option>Dragonborn</option><option>Aasimar</option><option>Genasi</option><option>Goliath</option><option>Firbolg</option><option>Tabaxi</option><option>Triton</option><option>Goblin</option><option>Kenku</option><option>Lizardfolk</option><option>Other / Ask DM</option></select>
             <div id="raceDescription" class="choice-help"><strong>Race / Species:</strong> Choose one to see a quick roleplay description.</div>
@@ -1035,7 +1050,7 @@
             <div class="sheet-box"><h3>Proficiencies</h3><textarea id="sheetProficiencies" placeholder="Armor, weapons, tools, saving throws, skills"></textarea></div>
             <div class="sheet-box"><h3>Languages</h3><textarea id="sheetLanguages" placeholder="Common, Elvish, Dwarvish..."></textarea></div>
             <div class="sheet-box sheet-wide"><h3>Features & Traits</h3><textarea id="sheetFeatures" placeholder="Race traits, class features, background feature, feats"></textarea></div>
-            <div class="sheet-box sheet-wide"><h3>Spellcasting & Class Resources</h3><div id="spellcastingGuide" class="sheet-helper"><strong>Spellcasting:</strong> Select a class and enter ability scores to calculate spellcasting details.</div><div class="mini-grid"><div class="field"><label for="sheetProficiencyBonus">Proficiency Bonus</label><input id="sheetProficiencyBonus" class="readonly-display" readonly /></div><div class="field"><label for="sheetSpellAbility">Spellcasting Ability</label><input id="sheetSpellAbility" /></div><div class="field"><label for="sheetSpellSaveDc">Spell Save DC</label><input id="sheetSpellSaveDc" /></div><div class="field"><label for="sheetSpellAttackBonus">Spell Attack Bonus</label><input id="sheetSpellAttackBonus" /></div></div><div class="field"><label for="sheetSpellSlots">Spell Slots / Class Resource Trackers</label><textarea id="sheetSpellSlots" placeholder="Examples: spell slots, pact slots, ki, sorcery points, channel divinity, rage uses, bardic inspiration"></textarea></div><div class="field"><label for="sheetSpellsKnown">Cantrips, Prepared Spells, Known Spells, Rituals</label><textarea id="sheetSpellsKnown"></textarea></div></div>
+            <div class="sheet-box sheet-wide"><h3>Spellcasting & Class Resources</h3><div id="spellcastingGuide" class="sheet-helper"><strong>Spellcasting:</strong> Select a class and enter ability scores to calculate spellcasting details.</div><div id="spellChangeGuide" class="sheet-helper"><strong>Changing spells:</strong> Class guidance will appear here.</div><div class="mini-grid"><div class="field"><label for="sheetProficiencyBonus">Proficiency Bonus</label><input id="sheetProficiencyBonus" class="readonly-display" readonly /></div><div class="field"><label for="sheetSpellAbility">Spellcasting Ability</label><input id="sheetSpellAbility" /></div><div class="field"><label for="sheetSpellSaveDc">Spell Save DC</label><input id="sheetSpellSaveDc" /></div><div class="field"><label for="sheetSpellAttackBonus">Spell Attack Bonus</label><input id="sheetSpellAttackBonus" /></div></div><div class="field"><label for="sheetSpellSlots">Spell Slots / Class Resource Trackers</label><textarea id="sheetSpellSlots" placeholder="Examples: spell slots, pact slots, ki, sorcery points, channel divinity, rage uses, bardic inspiration"></textarea></div><div class="spell-picker-controls"><div class="field"><label for="spellSearchInput">Search Available Spells</label><input id="spellSearchInput" placeholder="Search by spell name or effect" oninput="renderSpellPicker()" /></div><div class="field"><label for="spellLevelFilter">Spell Level Filter</label><select id="spellLevelFilter" onchange="renderSpellPicker()"><option value="all">All available levels</option><option value="0">Cantrips</option><option value="1">1st level</option><option value="2">2nd level</option><option value="3">3rd level</option><option value="4">4th level</option><option value="5">5th level</option><option value="6">6th level</option><option value="7">7th level</option><option value="8">8th level</option><option value="9">9th level</option></select></div></div><div class="spell-picker-grid"><div class="spell-list-panel"><h4>Available SRD Spells for This Class & Level</h4><div id="availableSpellList" class="spell-list"><p class="spell-empty">Choose a spellcasting class and level to see spells.</p></div></div><div class="spell-list-panel"><h4>Selected / Prepared / Known Spells</h4><div id="selectedSpellList" class="spell-list"><p class="spell-empty">No spells selected yet.</p></div></div></div><div class="field"><label for="sheetSpellsKnown">Manual Spell Notes</label><textarea id="sheetSpellsKnown" placeholder="Use this for non-SRD spells, special DM-approved spells, rituals, spellbook details, or extra notes."></textarea></div></div>
             <div class="sheet-box sheet-wide"><h3>Equipment, Treasure & Inventory</h3><textarea id="sheetInventory" placeholder="Weapons, armor, adventuring gear, magic items, coin"></textarea></div>
             <div class="sheet-box"><h3>Personality</h3><textarea id="sheetPersonality" placeholder="Personality traits"></textarea></div><div class="sheet-box"><h3>Ideals</h3><textarea id="sheetIdeals" placeholder="Ideals"></textarea></div><div class="sheet-box"><h3>Bonds</h3><textarea id="sheetBonds" placeholder="Bonds"></textarea></div><div class="sheet-box"><h3>Flaws</h3><textarea id="sheetFlaws" placeholder="Flaws"></textarea></div>
             <div class="sheet-box sheet-wide"><h3>Backstory & Campaign Notes</h3><textarea id="sheetBackstory" placeholder="Backstory, goals, secrets, NPC connections, session notes"></textarea></div>
@@ -1343,6 +1358,7 @@
         if (checkbox) checkbox.checked = !!saved[id];
       });
       updateSkillTotals();
+      renderSpellPicker();
     }
 
     ['sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetLevel','sheetClass'].forEach(id => {
@@ -1550,6 +1566,310 @@
       "Blood Hunter / Ask DM": "Confirm rules with Mason. If using spellcasting or hemocraft features, track the chosen ability and resource here."
     };
 
+    const spellChangeRules = {
+      "Bard": "Bards are known-spell casters. Under 2014 5e rules, you usually choose spells when you level up and may replace one known Bard spell when gaining a Bard level.",
+      "Cleric": "Clerics are prepared casters. After a long rest, you can prepare Cleric spells from the Cleric list. Your prepared count is usually Cleric level + Wisdom modifier, minimum 1.",
+      "Druid": "Druids are prepared casters. After a long rest, you can prepare Druid spells from the Druid list. Your prepared count is usually Druid level + Wisdom modifier, minimum 1.",
+      "Paladin": "Paladins prepare spells after a long rest starting at level 2. Your prepared count is usually half your Paladin level rounded down + Charisma modifier, minimum 1.",
+      "Ranger": "Rangers are known-spell casters under 2014 5e rules. You learn Ranger spells as you level up and may replace one known spell when gaining a Ranger level.",
+      "Sorcerer": "Sorcerers are known-spell casters. You usually learn spells when leveling up and may replace one known Sorcerer spell when gaining a Sorcerer level.",
+      "Warlock": "Warlocks are known-spell pact casters. You learn spells as you level up and may replace one known Warlock spell when gaining a Warlock level. Pact slots return on a short rest.",
+      "Wizard": "Wizards prepare spells from their spellbook after a long rest. You can prepare Wizard level + Intelligence modifier spells, minimum 1. Add spells to the spellbook from leveling and copied scrolls/books.",
+      "Artificer": "Artificers prepare spells after a long rest. Your prepared count is usually half your Artificer level rounded up + Intelligence modifier, minimum 1.",
+      "Fighter": "Fighters usually do not cast spells unless they are Eldritch Knights. Eldritch Knights use Wizard spells and usually change spells when gaining Fighter levels.",
+      "Rogue": "Rogues usually do not cast spells unless they are Arcane Tricksters. Arcane Tricksters use Wizard spells and usually change spells when gaining Rogue levels.",
+      "Barbarian": "Barbarians do not normally cast spells. Use this section for magic items, subclass powers, or DM-approved abilities.",
+      "Monk": "Monks do not normally cast spells. Use this section for Ki, subclass powers, or DM-approved abilities.",
+      "Blood Hunter / Ask DM": "Ask Mason which spell or blood magic rules apply. Track those choices here."
+    };
+
+    const spellClassAliases = { "Fighter": "Wizard", "Rogue": "Wizard" };
+
+    const srdSpells = [
+      {name:"Acid Splash",level:0,classes:["Sorcerer","Wizard"],school:"Conjuration",summary:"Hurl acid at one or two nearby creatures; each target makes a Dexterity save."},
+      {name:"Chill Touch",level:0,classes:["Sorcerer","Warlock","Wizard"],school:"Necromancy",summary:"A ghostly hand deals necrotic damage and hinders healing."},
+      {name:"Dancing Lights",level:0,classes:["Bard","Sorcerer","Wizard"],school:"Evocation",summary:"Create small floating lights that move within range."},
+      {name:"Druidcraft",level:0,classes:["Druid"],school:"Transmutation",summary:"Create a small nature omen or minor natural effect."},
+      {name:"Eldritch Blast",level:0,classes:["Warlock"],school:"Evocation",summary:"Fire a beam of force. A classic Warlock attack cantrip."},
+      {name:"Fire Bolt",level:0,classes:["Sorcerer","Wizard","Artificer"],school:"Evocation",summary:"Hurl a mote of fire at a creature or object."},
+      {name:"Guidance",level:0,classes:["Cleric","Druid","Artificer"],school:"Divination",summary:"Add a small bonus to one ability check for a willing creature."},
+      {name:"Light",level:0,classes:["Bard","Cleric","Sorcerer","Wizard","Artificer"],school:"Evocation",summary:"Make an object shine bright light."},
+      {name:"Mage Hand",level:0,classes:["Bard","Sorcerer","Warlock","Wizard","Artificer"],school:"Conjuration",summary:"Create a spectral hand that manipulates simple objects at a distance."},
+      {name:"Mending",level:0,classes:["Bard","Cleric","Druid","Sorcerer","Wizard","Artificer"],school:"Transmutation",summary:"Repair a small break or tear in an object."},
+      {name:"Minor Illusion",level:0,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Illusion",summary:"Create a small sound or image illusion."},
+      {name:"Poison Spray",level:0,classes:["Druid","Sorcerer","Warlock","Wizard","Artificer"],school:"Conjuration",summary:"Project poisonous gas at a nearby creature."},
+      {name:"Prestidigitation",level:0,classes:["Bard","Sorcerer","Warlock","Wizard","Artificer"],school:"Transmutation",summary:"Perform tiny magical tricks such as cleaning, warming, or flavoring."},
+      {name:"Produce Flame",level:0,classes:["Druid"],school:"Conjuration",summary:"Create flame for light or throw it as a spell attack."},
+      {name:"Ray of Frost",level:0,classes:["Sorcerer","Wizard","Artificer"],school:"Evocation",summary:"A cold ray deals damage and slows the target."},
+      {name:"Sacred Flame",level:0,classes:["Cleric"],school:"Evocation",summary:"Radiant fire descends on a creature that fails a Dexterity save."},
+      {name:"Shillelagh",level:0,classes:["Druid"],school:"Transmutation",summary:"Empower a club or staff so it attacks with your spellcasting ability."},
+      {name:"Shocking Grasp",level:0,classes:["Sorcerer","Wizard","Artificer"],school:"Evocation",summary:"Lightning touch deals damage and can stop reactions."},
+      {name:"Spare the Dying",level:0,classes:["Cleric","Artificer"],school:"Necromancy",summary:"Stabilize a dying creature at 0 hit points."},
+      {name:"Thaumaturgy",level:0,classes:["Cleric"],school:"Transmutation",summary:"Create small divine signs such as a booming voice or altered flames."},
+      {name:"Vicious Mockery",level:0,classes:["Bard"],school:"Enchantment",summary:"Deal psychic damage and hinder a target's next attack."},
+
+      {name:"Alarm",level:1,classes:["Ranger","Wizard","Artificer"],school:"Abjuration",summary:"Set a magical alarm against intrusion."},
+      {name:"Bane",level:1,classes:["Bard","Cleric"],school:"Enchantment",summary:"Several enemies subtract from attacks and saves."},
+      {name:"Bless",level:1,classes:["Cleric","Paladin"],school:"Enchantment",summary:"Allies add a bonus to attacks and saving throws."},
+      {name:"Burning Hands",level:1,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"A cone of flame burns creatures in front of you."},
+      {name:"Charm Person",level:1,classes:["Bard","Druid","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"A humanoid may become charmed by you."},
+      {name:"Cure Wounds",level:1,classes:["Bard","Cleric","Druid","Paladin","Ranger","Artificer"],school:"Evocation",summary:"Heal a creature you touch."},
+      {name:"Detect Magic",level:1,classes:["Bard","Cleric","Druid","Paladin","Ranger","Sorcerer","Wizard","Artificer"],school:"Divination",summary:"Sense magical auras nearby."},
+      {name:"Disguise Self",level:1,classes:["Bard","Sorcerer","Wizard","Artificer"],school:"Illusion",summary:"Change your appearance with an illusion."},
+      {name:"Divine Favor",level:1,classes:["Paladin"],school:"Evocation",summary:"Your weapon attacks deal extra radiant damage."},
+      {name:"Entangle",level:1,classes:["Druid"],school:"Conjuration",summary:"Plants restrain creatures in an area."},
+      {name:"Faerie Fire",level:1,classes:["Bard","Druid","Artificer"],school:"Evocation",summary:"Outline creatures in light, making them easier to hit."},
+      {name:"Feather Fall",level:1,classes:["Bard","Sorcerer","Wizard","Artificer"],school:"Transmutation",summary:"Slow falling creatures to prevent impact damage."},
+      {name:"Find Familiar",level:1,classes:["Wizard"],school:"Conjuration",summary:"Summon a spirit familiar in animal form."},
+      {name:"Fog Cloud",level:1,classes:["Druid","Ranger","Sorcerer","Wizard"],school:"Conjuration",summary:"Create a heavily obscuring cloud of fog."},
+      {name:"Goodberry",level:1,classes:["Druid","Ranger"],school:"Transmutation",summary:"Create magical berries that feed and heal lightly."},
+      {name:"Guiding Bolt",level:1,classes:["Cleric"],school:"Evocation",summary:"A radiant attack deals damage and helps the next attack hit."},
+      {name:"Healing Word",level:1,classes:["Bard","Cleric","Druid"],school:"Evocation",summary:"Heal an ally at range with a bonus action."},
+      {name:"Heroism",level:1,classes:["Bard","Paladin"],school:"Enchantment",summary:"A willing creature resists fear and gains temporary hit points."},
+      {name:"Hunter's Mark",level:1,classes:["Ranger"],school:"Divination",summary:"Mark a target for extra weapon damage and easier tracking."},
+      {name:"Identify",level:1,classes:["Bard","Wizard","Artificer"],school:"Divination",summary:"Learn properties of a magic item or spell effect."},
+      {name:"Inflict Wounds",level:1,classes:["Cleric"],school:"Necromancy",summary:"A melee spell attack deals heavy necrotic damage."},
+      {name:"Mage Armor",level:1,classes:["Sorcerer","Wizard"],school:"Abjuration",summary:"Protect an unarmored creature with magical armor."},
+      {name:"Magic Missile",level:1,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"Force darts automatically hit targets you can see."},
+      {name:"Protection from Evil and Good",level:1,classes:["Cleric","Paladin","Warlock","Wizard"],school:"Abjuration",summary:"Protect a creature from several supernatural creature types."},
+      {name:"Shield",level:1,classes:["Sorcerer","Wizard"],school:"Abjuration",summary:"React to gain a burst of AC and block magic missile."},
+      {name:"Silent Image",level:1,classes:["Bard","Sorcerer","Wizard"],school:"Illusion",summary:"Create a visual illusion within range."},
+      {name:"Sleep",level:1,classes:["Bard","Sorcerer","Wizard"],school:"Enchantment",summary:"Magically put weaker creatures to sleep."},
+      {name:"Thunderwave",level:1,classes:["Bard","Druid","Sorcerer","Wizard"],school:"Evocation",summary:"A thunderous wave damages and pushes creatures away."},
+
+      {name:"Aid",level:2,classes:["Cleric","Paladin","Artificer"],school:"Abjuration",summary:"Increase current and maximum hit points for several allies."},
+      {name:"Alter Self",level:2,classes:["Sorcerer","Wizard"],school:"Transmutation",summary:"Change your body for adaptation, natural weapons, or appearance."},
+      {name:"Animal Messenger",level:2,classes:["Bard","Druid","Ranger"],school:"Enchantment",summary:"Send a small beast to deliver a message."},
+      {name:"Arcane Lock",level:2,classes:["Wizard","Artificer"],school:"Abjuration",summary:"Magically secure a door, chest, or portal."},
+      {name:"Augury",level:2,classes:["Cleric"],school:"Divination",summary:"Receive an omen about whether a planned action may bring good or bad results."},
+      {name:"Barkskin",level:2,classes:["Druid","Ranger"],school:"Transmutation",summary:"Set a creature's minimum AC while the spell lasts."},
+      {name:"Blur",level:2,classes:["Sorcerer","Wizard","Artificer"],school:"Illusion",summary:"Your blurred form makes attacks against you less reliable."},
+      {name:"Calm Emotions",level:2,classes:["Bard","Cleric"],school:"Enchantment",summary:"Suppress fear/charm or calm hostile creatures in an area."},
+      {name:"Darkness",level:2,classes:["Sorcerer","Warlock","Wizard"],school:"Evocation",summary:"Create magical darkness that blocks normal vision."},
+      {name:"Darkvision",level:2,classes:["Druid","Ranger","Sorcerer","Wizard","Artificer"],school:"Transmutation",summary:"Grant a creature the ability to see in darkness."},
+      {name:"Enhance Ability",level:2,classes:["Bard","Cleric","Druid","Sorcerer","Artificer"],school:"Transmutation",summary:"Grant advantage on one type of ability check."},
+      {name:"Flaming Sphere",level:2,classes:["Druid","Wizard"],school:"Conjuration",summary:"Create a rolling ball of fire that burns nearby creatures."},
+      {name:"Hold Person",level:2,classes:["Bard","Cleric","Druid","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"Paralyze a humanoid that fails a Wisdom save."},
+      {name:"Invisibility",level:2,classes:["Bard","Sorcerer","Warlock","Wizard","Artificer"],school:"Illusion",summary:"Make a creature invisible until it attacks, casts, or the spell ends."},
+      {name:"Lesser Restoration",level:2,classes:["Bard","Cleric","Druid","Paladin","Ranger","Artificer"],school:"Abjuration",summary:"End one disease or certain conditions on a creature."},
+      {name:"Levitate",level:2,classes:["Sorcerer","Wizard","Artificer"],school:"Transmutation",summary:"Move a creature or object up and down through the air."},
+      {name:"Magic Weapon",level:2,classes:["Paladin","Wizard","Artificer"],school:"Transmutation",summary:"Make a nonmagical weapon magical with a bonus."},
+      {name:"Misty Step",level:2,classes:["Sorcerer","Warlock","Wizard"],school:"Conjuration",summary:"Teleport a short distance as a bonus action."},
+      {name:"Pass without Trace",level:2,classes:["Druid","Ranger"],school:"Abjuration",summary:"Greatly improve stealth for nearby companions."},
+      {name:"Prayer of Healing",level:2,classes:["Cleric"],school:"Evocation",summary:"Heal several allies outside immediate combat."},
+      {name:"Scorching Ray",level:2,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"Fire multiple rays of flame at one or more targets."},
+      {name:"Shatter",level:2,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Evocation",summary:"A loud burst damages creatures and objects in an area."},
+      {name:"Silence",level:2,classes:["Bard","Cleric","Ranger"],school:"Illusion",summary:"Create an area where sound cannot be made or pass through."},
+      {name:"Spiritual Weapon",level:2,classes:["Cleric"],school:"Evocation",summary:"Create a floating weapon that attacks as a bonus action."},
+      {name:"Web",level:2,classes:["Sorcerer","Wizard","Artificer"],school:"Conjuration",summary:"Fill an area with sticky webs that can restrain creatures."},
+
+      {name:"Beacon of Hope",level:3,classes:["Cleric"],school:"Abjuration",summary:"Bolster allies with better Wisdom/death saves and maximized healing."},
+      {name:"Bestow Curse",level:3,classes:["Bard","Cleric","Wizard"],school:"Necromancy",summary:"Curse a creature with a chosen penalty or harmful effect."},
+      {name:"Call Lightning",level:3,classes:["Druid"],school:"Conjuration",summary:"Call repeated bolts from a storm cloud."},
+      {name:"Counterspell",level:3,classes:["Sorcerer","Warlock","Wizard"],school:"Abjuration",summary:"React to interrupt another creature casting a spell."},
+      {name:"Daylight",level:3,classes:["Cleric","Druid","Paladin","Ranger","Sorcerer"],school:"Evocation",summary:"Create a large area of bright magical light."},
+      {name:"Dispel Magic",level:3,classes:["Bard","Cleric","Druid","Paladin","Sorcerer","Warlock","Wizard","Artificer"],school:"Abjuration",summary:"End spells affecting a creature, object, or area."},
+      {name:"Fear",level:3,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Illusion",summary:"Terrify creatures in a cone, forcing them to flee."},
+      {name:"Fireball",level:3,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"A classic explosion of fire in a large area."},
+      {name:"Fly",level:3,classes:["Sorcerer","Warlock","Wizard","Artificer"],school:"Transmutation",summary:"Grant a creature a flying speed."},
+      {name:"Haste",level:3,classes:["Sorcerer","Wizard","Artificer"],school:"Transmutation",summary:"Speed up a creature, improving AC, movement, saves, and actions."},
+      {name:"Hypnotic Pattern",level:3,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Illusion",summary:"Incapacitate creatures with a captivating pattern."},
+      {name:"Lightning Bolt",level:3,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"A line of lightning blasts creatures in its path."},
+      {name:"Mass Healing Word",level:3,classes:["Cleric"],school:"Evocation",summary:"Heal several allies at range as a bonus action."},
+      {name:"Plant Growth",level:3,classes:["Bard","Druid","Ranger"],school:"Transmutation",summary:"Enrich plants or make terrain extremely hard to move through."},
+      {name:"Protection from Energy",level:3,classes:["Cleric","Druid","Ranger","Sorcerer","Wizard","Artificer"],school:"Abjuration",summary:"Grant resistance to one common energy type."},
+      {name:"Revivify",level:3,classes:["Cleric","Paladin","Artificer"],school:"Necromancy",summary:"Return a recently dead creature to life if cast in time."},
+      {name:"Spirit Guardians",level:3,classes:["Cleric"],school:"Conjuration",summary:"Spirits protect you, harming and slowing nearby enemies."},
+      {name:"Water Breathing",level:3,classes:["Druid","Ranger","Sorcerer","Wizard","Artificer"],school:"Transmutation",summary:"Allow multiple creatures to breathe underwater."},
+
+      {name:"Banishment",level:4,classes:["Cleric","Paladin","Sorcerer","Warlock","Wizard"],school:"Abjuration",summary:"Send a creature to another plane temporarily."},
+      {name:"Blight",level:4,classes:["Druid","Sorcerer","Warlock","Wizard"],school:"Necromancy",summary:"Necrotic energy withers a creature, especially plants."},
+      {name:"Confusion",level:4,classes:["Bard","Druid","Sorcerer","Wizard"],school:"Enchantment",summary:"Creatures in an area act unpredictably."},
+      {name:"Control Water",level:4,classes:["Cleric","Druid","Wizard"],school:"Transmutation",summary:"Manipulate a large body of water in dramatic ways."},
+      {name:"Death Ward",level:4,classes:["Cleric","Paladin"],school:"Abjuration",summary:"Protect a creature from dropping to 0 or instant death once."},
+      {name:"Dimension Door",level:4,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Conjuration",summary:"Teleport yourself and possibly one passenger a long distance."},
+      {name:"Freedom of Movement",level:4,classes:["Bard","Cleric","Druid","Ranger","Artificer"],school:"Abjuration",summary:"Prevent movement-reducing magic and help escape restraints."},
+      {name:"Greater Invisibility",level:4,classes:["Bard","Sorcerer","Wizard"],school:"Illusion",summary:"Make a creature invisible even while it attacks or casts."},
+      {name:"Guardian of Faith",level:4,classes:["Cleric"],school:"Conjuration",summary:"Create a radiant guardian that damages enemies entering its space."},
+      {name:"Ice Storm",level:4,classes:["Druid","Sorcerer","Wizard"],school:"Evocation",summary:"Hail and ice batter an area and make terrain difficult."},
+      {name:"Polymorph",level:4,classes:["Bard","Druid","Sorcerer","Wizard"],school:"Transmutation",summary:"Transform a creature into a beast."},
+      {name:"Stoneskin",level:4,classes:["Druid","Ranger","Sorcerer","Wizard","Artificer"],school:"Abjuration",summary:"Grant resistance to nonmagical weapon damage."},
+      {name:"Wall of Fire",level:4,classes:["Druid","Sorcerer","Wizard"],school:"Evocation",summary:"Create a burning wall that damages creatures."},
+
+      {name:"Animate Objects",level:5,classes:["Bard","Sorcerer","Wizard"],school:"Transmutation",summary:"Bring objects to life and command them in combat."},
+      {name:"Cloudkill",level:5,classes:["Sorcerer","Wizard"],school:"Conjuration",summary:"Create a drifting poisonous cloud."},
+      {name:"Commune",level:5,classes:["Cleric"],school:"Divination",summary:"Ask a divine power yes-or-no questions."},
+      {name:"Cone of Cold",level:5,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"Blast a cone of freezing cold."},
+      {name:"Contact Other Plane",level:5,classes:["Warlock","Wizard"],school:"Divination",summary:"Risk your mind to question an extraplanar entity."},
+      {name:"Dispel Evil and Good",level:5,classes:["Cleric","Paladin"],school:"Abjuration",summary:"Protect against or end influence from certain supernatural creatures."},
+      {name:"Dominate Person",level:5,classes:["Bard","Sorcerer","Wizard"],school:"Enchantment",summary:"Control a humanoid that fails a Wisdom save."},
+      {name:"Flame Strike",level:5,classes:["Cleric"],school:"Evocation",summary:"Call down divine fire and radiant power."},
+      {name:"Greater Restoration",level:5,classes:["Bard","Cleric","Druid","Artificer"],school:"Abjuration",summary:"End powerful afflictions such as certain curses or exhaustion."},
+      {name:"Hold Monster",level:5,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"Paralyze a creature that fails a Wisdom save."},
+      {name:"Mass Cure Wounds",level:5,classes:["Bard","Cleric","Druid"],school:"Evocation",summary:"Heal several creatures in an area."},
+      {name:"Raise Dead",level:5,classes:["Bard","Cleric","Paladin"],school:"Necromancy",summary:"Return a dead creature to life within the spell's limits."},
+      {name:"Scrying",level:5,classes:["Bard","Cleric","Druid","Warlock","Wizard"],school:"Divination",summary:"Observe a distant creature or location through a magical sensor."},
+      {name:"Wall of Force",level:5,classes:["Wizard"],school:"Evocation",summary:"Create an invisible wall of force that is very hard to destroy."},
+      {name:"Wall of Stone",level:5,classes:["Druid","Sorcerer","Wizard","Artificer"],school:"Evocation",summary:"Shape a wall of stone that can become permanent."},
+
+      {name:"Chain Lightning",level:6,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"Lightning arcs from one target to several others."},
+      {name:"Disintegrate",level:6,classes:["Sorcerer","Wizard"],school:"Transmutation",summary:"A ray deals massive force damage and may reduce a target to dust."},
+      {name:"Heal",level:6,classes:["Cleric","Druid"],school:"Evocation",summary:"Restore a large amount of hit points and end some conditions."},
+      {name:"Heroes' Feast",level:6,classes:["Cleric","Druid"],school:"Conjuration",summary:"Create a magical feast that strengthens and protects participants."},
+      {name:"Mass Suggestion",level:6,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"Magically influence several creatures with a reasonable course of action."},
+      {name:"True Seeing",level:6,classes:["Bard","Cleric","Sorcerer","Warlock","Wizard"],school:"Divination",summary:"Grant truesight for a time."},
+      {name:"Delayed Blast Fireball",level:7,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"Create a fireball that grows stronger the longer it waits."},
+      {name:"Divine Word",level:7,classes:["Cleric"],school:"Evocation",summary:"Speak a divine word that harms or banishes weakened foes."},
+      {name:"Etherealness",level:7,classes:["Bard","Cleric","Sorcerer","Warlock","Wizard"],school:"Transmutation",summary:"Step into the Ethereal Plane."},
+      {name:"Fire Storm",level:7,classes:["Cleric","Druid","Sorcerer"],school:"Evocation",summary:"Sheets of flame erupt in chosen areas."},
+      {name:"Plane Shift",level:7,classes:["Cleric","Druid","Sorcerer","Warlock","Wizard"],school:"Conjuration",summary:"Travel to another plane or banish a creature."},
+      {name:"Regenerate",level:7,classes:["Bard","Cleric","Druid"],school:"Transmutation",summary:"Restore a creature over time and regrow lost body parts."},
+      {name:"Teleport",level:7,classes:["Bard","Sorcerer","Wizard"],school:"Conjuration",summary:"Transport yourself and others to a known destination."},
+      {name:"Antimagic Field",level:8,classes:["Cleric","Wizard"],school:"Abjuration",summary:"Create an area where most magic is suppressed."},
+      {name:"Dominate Monster",level:8,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"Control a creature that fails a Wisdom save."},
+      {name:"Earthquake",level:8,classes:["Cleric","Druid","Sorcerer"],school:"Evocation",summary:"Shake the ground in a large area."},
+      {name:"Holy Aura",level:8,classes:["Cleric"],school:"Abjuration",summary:"Allies shine with divine protection."},
+      {name:"Power Word Stun",level:8,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"Stun a creature with low enough hit points."},
+      {name:"Sunburst",level:8,classes:["Druid","Sorcerer","Wizard"],school:"Evocation",summary:"Brilliant sunlight damages and blinds creatures in a wide area."},
+      {name:"Foresight",level:9,classes:["Bard","Druid","Warlock","Wizard"],school:"Divination",summary:"Grant supernatural warning, advantage, and defensive benefits."},
+      {name:"Gate",level:9,classes:["Cleric","Sorcerer","Wizard"],school:"Conjuration",summary:"Open a portal to another plane or call a specific creature."},
+      {name:"Mass Heal",level:9,classes:["Cleric"],school:"Evocation",summary:"Distribute a huge amount of healing among creatures."},
+      {name:"Meteor Swarm",level:9,classes:["Sorcerer","Wizard"],school:"Evocation",summary:"Devastating fiery meteors strike multiple points."},
+      {name:"Power Word Kill",level:9,classes:["Bard","Sorcerer","Warlock","Wizard"],school:"Enchantment",summary:"Instantly slay a creature with low enough hit points."},
+      {name:"Shapechange",level:9,classes:["Druid","Wizard"],school:"Transmutation",summary:"Transform into powerful creatures while retaining your mind."},
+      {name:"Time Stop",level:9,classes:["Sorcerer","Wizard"],school:"Transmutation",summary:"Briefly take extra turns while time is stopped for others."},
+      {name:"True Resurrection",level:9,classes:["Cleric","Druid"],school:"Necromancy",summary:"Restore a dead creature to life with powerful magic."},
+      {name:"Wish",level:9,classes:["Sorcerer","Wizard"],school:"Conjuration",summary:"The mightiest mortal spell, able to duplicate spells or attempt extraordinary effects."}
+    ];
+
+    let selectedSpells = [];
+
+    function spellLevelName(level) {
+      if (Number(level) === 0) return 'Cantrip';
+      const names = {1:'1st',2:'2nd',3:'3rd',4:'4th',5:'5th',6:'6th',7:'7th',8:'8th',9:'9th'};
+      return `${names[level] || level} level`;
+    }
+
+    function getPickerClassName() {
+      const className = getSheetValue('sheetClass');
+      return spellClassAliases[className] || className;
+    }
+
+    function maxSpellLevelForClass(className, levelValue) {
+      const level = Math.min(20, Math.max(1, Number(levelValue) || 1));
+      if (className === 'Paladin' || className === 'Ranger') {
+        if (level < 2) return 0;
+        if (level < 5) return 1;
+        if (level < 9) return 2;
+        if (level < 13) return 3;
+        if (level < 17) return 4;
+        return 5;
+      }
+      if (className === 'Artificer') {
+        if (level < 5) return 1;
+        if (level < 9) return 2;
+        if (level < 13) return 3;
+        if (level < 17) return 4;
+        return 5;
+      }
+      if (className === 'Warlock') {
+        if (level < 3) return 1;
+        if (level < 5) return 2;
+        if (level < 7) return 3;
+        if (level < 9) return 4;
+        return 5;
+      }
+      if (className === 'Fighter' || className === 'Rogue') {
+        if (level < 3) return 0;
+        if (level < 7) return 1;
+        if (level < 13) return 2;
+        if (level < 19) return 3;
+        return 4;
+      }
+      if (['Bard','Cleric','Druid','Sorcerer','Wizard'].includes(className)) {
+        if (level < 3) return 1;
+        if (level < 5) return 2;
+        if (level < 7) return 3;
+        if (level < 9) return 4;
+        if (level < 11) return 5;
+        if (level < 13) return 6;
+        if (level < 15) return 7;
+        if (level < 17) return 8;
+        return 9;
+      }
+      return 0;
+    }
+
+    function getAvailableSpellsForSheet() {
+      const rawClass = getSheetValue('sheetClass');
+      const pickerClass = getPickerClassName();
+      const maxLevel = maxSpellLevelForClass(rawClass, getSheetValue('sheetLevel'));
+      if (!pickerClass || maxLevel === 0) return [];
+      return srdSpells
+        .filter(spell => spell.classes.includes(pickerClass) && spell.level <= maxLevel)
+        .sort((a,b) => a.level - b.level || a.name.localeCompare(b.name));
+    }
+
+    function spellKey(spell) { return `${spell.name}|${spell.level}`; }
+
+    function addSelectedSpell(key) {
+      const spell = srdSpells.find(item => spellKey(item) === key);
+      if (!spell) return;
+      if (!selectedSpells.some(item => spellKey(item) === key)) selectedSpells.push(spell);
+      renderSpellPicker();
+    }
+
+    function removeSelectedSpell(key) {
+      selectedSpells = selectedSpells.filter(item => spellKey(item) !== key);
+      renderSpellPicker();
+    }
+
+    function renderSpellCard(spell, selected) {
+      const safeKey = spellKey(spell).replaceAll("'", "&#039;");
+      const button = selected
+        ? `<button class="tiny-button secondary" onclick="removeSelectedSpell('${safeKey}')">Remove</button>`
+        : `<button class="tiny-button" onclick="addSelectedSpell('${safeKey}')">Select</button>`;
+      return `
+        <div class="spell-card">
+          <strong>${escapeHtml(spell.name)}</strong>
+          <div class="spell-meta">${escapeHtml(spellLevelName(spell.level))} • ${escapeHtml(spell.school)}</div>
+          <p>${escapeHtml(spell.summary)}</p>
+          <div class="spell-actions">${button}</div>
+        </div>
+      `;
+    }
+
+    function renderSpellPicker() {
+      const availableBox = document.getElementById('availableSpellList');
+      const selectedBox = document.getElementById('selectedSpellList');
+      const changeBox = document.getElementById('spellChangeGuide');
+      if (!availableBox || !selectedBox) return;
+      const className = getSheetValue('sheetClass');
+      const pickerClass = getPickerClassName();
+      const maxLevel = maxSpellLevelForClass(className, getSheetValue('sheetLevel'));
+      const search = (document.getElementById('spellSearchInput')?.value || '').trim().toLowerCase();
+      const levelFilter = document.getElementById('spellLevelFilter')?.value || 'all';
+      if (changeBox) changeBox.innerHTML = `<strong>Changing spells:</strong> ${escapeHtml(spellChangeRules[className] || 'Select a class to see how spell choices usually change under 2014 5e rules.')}`;
+      let available = getAvailableSpellsForSheet();
+      if (levelFilter !== 'all') available = available.filter(spell => String(spell.level) === levelFilter);
+      if (search) available = available.filter(spell => `${spell.name} ${spell.school} ${spell.summary}`.toLowerCase().includes(search));
+      if (!pickerClass || maxLevel === 0) {
+        availableBox.innerHTML = `<p class="spell-empty">${escapeHtml(spellChangeRules[className] || 'This class has no standard spell list here. Use Manual Spell Notes for magic items or DM-approved powers.')}</p>`;
+      } else if (available.length === 0) {
+        availableBox.innerHTML = '<p class="spell-empty">No matching spells found for this class, level, and filter.</p>';
+      } else {
+        availableBox.innerHTML = available.map(spell => renderSpellCard(spell, selectedSpells.some(item => spellKey(item) === spellKey(spell)))).join('');
+      }
+      selectedBox.innerHTML = selectedSpells.length
+        ? selectedSpells.slice().sort((a,b) => a.level - b.level || a.name.localeCompare(b.name)).map(spell => renderSpellCard(spell, true)).join('')
+        : '<p class="spell-empty">No spells selected yet. Use Select to build prepared/known/equipped spells.</p>';
+    }
+
+    window.addSelectedSpell = addSelectedSpell;
+    window.removeSelectedSpell = removeSelectedSpell;
+    window.renderSpellPicker = renderSpellPicker;
+
+
     function signedNumber(value) {
       const n = Number(value) || 0;
       return n >= 0 ? `+${n}` : `${n}`;
@@ -1609,6 +1929,7 @@
         if (guide) guide.innerHTML = `<strong>${escapeHtml(className || 'Class resources')}:</strong> ${escapeHtml(classResourceHints[className] || 'This class may not have standard spellcasting. Use this area for class resources, magic items, special powers, or DM-approved features.')}`;
       }
       updateSkillTotals();
+      renderSpellPicker();
     }
 
     const sheetFieldIds = ['sheetCharacterName','sheetPlayerName','sheetRace','sheetClass','sheetSubclass','sheetLevel','sheetBackground','sheetAlignment','sheetStrength','sheetDexterity','sheetConstitution','sheetIntelligence','sheetWisdom','sheetCharisma','sheetHpCurrent','sheetHpMax','sheetTempHp','sheetArmorClass','sheetInitiative','sheetSpeed','sheetHitDice','sheetDeathSuccesses','sheetDeathFailures','sheetSavingThrows','sheetAttacks','sheetProficiencies','sheetLanguages','sheetFeatures','sheetSpellAbility','sheetSpellSaveDc','sheetSpellAttackBonus','sheetSpellSlots','sheetSpellsKnown','sheetInventory','sheetPersonality','sheetIdeals','sheetBonds','sheetFlaws','sheetBackstory'];
@@ -1633,8 +1954,8 @@
     function updateMyClassAdvice() { const className = document.getElementById('sheetClass')?.value || ''; const box = document.getElementById('classAdvice'); if (!box) return; const note = classPlayNotes[className] || classDescriptions[className] || 'Fill in class features, resources, attacks, spells, and trackers that matter for your character.'; box.innerHTML = `<strong>${escapeHtml(className || 'Class help')}:</strong> ${escapeHtml(note)}`; }
     function setSheetValue(id, value) { const el = document.getElementById(id); if (el) el.value = value ?? ''; }
     function getSheetValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
-    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); setSkillProficiencies(data); updateMyClassAdvice(); updateDerivedCharacterMath(); }
-    function collectSheetData() { updateDerivedCharacterMath(); const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.SkillProficiencies = getSkillProficiencies(); data.ProficiencyBonus = getSheetValue('sheetProficiencyBonus'); data.AbilityModifiers = { Strength: document.getElementById('sheetStrengthMod')?.textContent || '+0', Dexterity: document.getElementById('sheetDexterityMod')?.textContent || '+0', Constitution: document.getElementById('sheetConstitutionMod')?.textContent || '+0', Intelligence: document.getElementById('sheetIntelligenceMod')?.textContent || '+0', Wisdom: document.getElementById('sheetWisdomMod')?.textContent || '+0', Charisma: document.getElementById('sheetCharismaMod')?.textContent || '+0' }; data.ownerEmail = dmEditingUid ? dmEditingEmail : (currentUser?.email || ''); data.ownerUid = dmEditingUid || currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = dmEditingUid ? getApprovedByEmail(dmEditingEmail) : getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
+    function fillSheet(data = {}) { sheetFieldIds.forEach(id => { const key = id.replace('sheet',''); setSheetValue(id, data[key] ?? data[id] ?? ''); }); selectedSpells = Array.isArray(data.SelectedSpells) ? data.SelectedSpells : (Array.isArray(data.selectedSpells) ? data.selectedSpells : []); setSkillProficiencies(data); updateMyClassAdvice(); updateDerivedCharacterMath(); renderSpellPicker(); }
+    function collectSheetData() { updateDerivedCharacterMath(); const data = {}; sheetFieldIds.forEach(id => { data[id.replace('sheet','')] = getSheetValue(id); }); data.SkillProficiencies = getSkillProficiencies(); data.SelectedSpells = selectedSpells; data.ProficiencyBonus = getSheetValue('sheetProficiencyBonus'); data.AbilityModifiers = { Strength: document.getElementById('sheetStrengthMod')?.textContent || '+0', Dexterity: document.getElementById('sheetDexterityMod')?.textContent || '+0', Constitution: document.getElementById('sheetConstitutionMod')?.textContent || '+0', Intelligence: document.getElementById('sheetIntelligenceMod')?.textContent || '+0', Wisdom: document.getElementById('sheetWisdomMod')?.textContent || '+0', Charisma: document.getElementById('sheetCharismaMod')?.textContent || '+0' }; data.ownerEmail = dmEditingUid ? dmEditingEmail : (currentUser?.email || ''); data.ownerUid = dmEditingUid || currentUser?.uid || ''; data.updatedAtLocal = new Date().toISOString(); const approved = dmEditingUid ? getApprovedByEmail(dmEditingEmail) : getApprovedForCurrentUser(); if (approved) { data.approvedCharacterId = approved.id || ''; data.approvedCharacterName = approved.characterName || ''; } return data; }
     function loadApprovedCharacterIntoSheet() { const approved = getApprovedForCurrentUser(); if (!approved) return alert('No approved character is linked to your login email yet.'); setSheetValue('sheetCharacterName', approved.characterName || ''); setSheetValue('sheetPlayerName', approved.playerName || ''); setSheetValue('sheetRace', approved.race || ''); setSheetValue('sheetClass', approved.characterClass || ''); setSheetValue('sheetBackground', approved.background || ''); const backstory = getSheetValue('sheetBackstory'); if (!backstory && approved.concept) setSheetValue('sheetBackstory', approved.concept); updateMyClassAdvice(); updateDerivedCharacterMath(); document.getElementById('myCharacterSaveStatus').textContent = 'Approved character loaded into the sheet. Click Save Character Sheet to keep it.'; }
     function getApprovedByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentApprovedEntries.find(entry => String(entry.playerEmail || '').toLowerCase() === lower) || null; }
     function getSavedSheetByEmail(email) { if (!email) return null; const lower = String(email).toLowerCase(); return currentAllCharacterSheets.find(entry => String(entry.ownerEmail || '').toLowerCase() === lower) || null; }
